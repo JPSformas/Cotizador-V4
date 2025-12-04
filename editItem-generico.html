@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configuración de Producto Genérico</title>
+  
+  <!-- Bootstrap 5 & FontAwesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+ 
+  <link href="styles/nuevo-header.css" rel="stylesheet">
+  <link href="styles/complementos.css" rel="stylesheet">
+  <link href="styles/sidebar.css" rel="stylesheet">
+  <link href="styles/select-image-modal.css" rel="stylesheet">
+  <link href="editItem.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ==========  HEADER GLOBAL  ========== -->
+<header class="navbar navbar-dark bg-black py-3">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="https://formas.shop/app">
+      <img src="IMG/Logo Formas.shop 2025-02.png" alt="Logo" style="max-height:30px">
+    </a>
+
+    <!-- Iconos derecha -->
+    <div class="d-flex align-items-center ms-auto">
+      <div class="dropdown">
+        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="avatar-circle d-inline-flex align-items-center justify-content-center me-2">
+                <i class="fa-solid fa-user"></i>
+              </span>
+            <span class="d-none d-md-inline userDataName">Invitado</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+            <span class="dropdown-item-text userDataName-mobile">Invitado</span>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/app/order/list">Mis pedidos</a></li>
+            <li><a class="dropdown-item" href="/app/order/repeat">Últimas compras</a></li>
+            <li><a class="dropdown-item" href="/app/order-cotization">Mis cotizaciones</a></li>
+            <li><a class="dropdown-item" href="/logout">Salir</a></li>
+        </ul>
+      </div>
+      <a href="/app/order" class="btn text-white position-relative"><i class="fas fa-cart-shopping fa-xl"></i>
+        <span class="position-absolute top-10 start-90 translate-middle  cart-count">2</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ==========  CONTENIDO PRINCIPAL  ========== -->
+<main class="container py-4">
+  <div class="d-flex justify-content-start align-items-center mb-4">
+    <a href="detalle-cotizacion.html" class="back-link">
+        <i class="fas fa-chevron-left"></i> Volver a detalle de cotización
+    </a>
+  </div>
+
+  <form>
+    <div class="card">
+      <!-- Información Básica -->
+      <div class="card-section">
+        <h1 class="h4 mb-0 fw-bold mb-4">Configuración de Producto Genérico</h1>
+        <h2 class="h5 mb-4">Información Básica</h2>
+        <div class="row">
+          <div class="col-md-3  mb-3 mb-md-0">
+            <div class="product-image mb-3"><img src="IMG/placeholderGeneric.jpg" class="product-img" id="selectedProductImage"></div>
+            <button type="button" class="btn btn-outline-secondary w-100" id="selectImageBtn">Seleccionar imagen</button>
+          </div>
+          <div class="col-md-9">
+            <div class="row mb-3">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <label for="nombreCategoria" class="form-label">Nombre del producto + Categoría</label>
+                <input type="text" id="nombreCategoria" name="nombreCategoria" class="form-control" value="Funda Impermeable | Marroquineria">
+              </div>
+              <div class="col-md-6">
+                <label for="SKU" class="form-label">SKU</label>
+                <input type="text" id="SKU" name="SKU" class="form-control">
+              </div>
+            </div>
+            <label for="Descripcion" class="form-label">Descripción del producto</label>
+            <textarea id="Descripcion" name="Descripcion" class="form-control" rows="3">FUNDA IMPERMEABLE PARA MOCHILA. CARACTERISTICAS: Funda cobertora para mochila urbana, en tela impermeable y liviana. COLOR: Negro</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configuración de precios -->
+      <div class="card-section">
+        <h2 class="h5 mb-4">Configuración de Precios</h2>
+        <div class="mb-4">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="priceOption" id="printOptionPrice" value="conPrecio" checked>
+            <label class="form-check-label" for="printOptionPrice">Con precio</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="priceOption" id="printOptionNoPrice" value="sinPrecio">
+            <label class="form-check-label" for="printOptionNoPrice">Sin precio</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="priceOption" id="printOptionNoPrice&Stock" value="sinPrecio&Stock">
+            <label class="form-check-label" for="printOptionNoPrice">Sin precio con stock</label>
+          </div>
+        </div>
+        <div class="row mb-4 ">
+          <div class="col-md-4 mb-3 mb-md-0" id="configPrecios">
+            <label for="configPreciosSelect" class="form-label">Configuración de precios</label>
+            <select class="form-select" id="configPreciosSelect">
+                <option value="conPrecio" selected>Con precio</option>
+                <option value="sinPrecio">Sin precio</option>
+                <option value="sinPrecio&Stock">Sin precio con stock</option>
+            </select>
+          </div>
+          <div class="col-md-3 mb-3 mb-md-0">
+            <label for="PVP/Costo" class="form-label">PVP / Costo</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="number" step="any" inputmode="numeric" id="PVP/Costo" name="PVP/Costo" class="form-control form-control-sm" value="">
+            </div>  
+          </div>
+          <div class="col-md-3 mb-3 mb-md-0">
+            <label for="stockDisponible" class="form-label">Stock disponible</label>
+            <input type="number" inputmode="numeric" id="stockDisponible" name="stockDisponible" class="form-control form-control-sm" value="" >
+          </div>
+          <div class="col-md-3 mb-3 mb-md-0">
+            <label for="minimoBonificacion" class="form-label">Mínimo para logo gratis</label>
+            <input type="number" inputmode="numeric" id="minimoBonificacion" name="minimoBonificacion" class="form-control form-control-sm" value="">
+          </div>
+          <div class="col-md-3">
+            <label for="setupLogo" class="form-label">Setup logo</label>
+            <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" step="any" inputmode="numeric" id="setupLogo" name="setupLogo" class="form-control form-control-sm" value="">
+            </div> 
+          </div>
+        </div>
+
+        <!-- Tabla Desktop-->
+        <div class="table-responsive mb-2">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="min-110">Cantidad</th>
+                <th class="min-110">Precio x Volumen</th>
+                <th class="min-110">SETUP Prorrateado</th>
+                <th class="min-110">Costo extra</th>
+                <th class="min-110">Margen</th>
+                <th class="min-110">Descuento</th>
+                <th class="min-110">Financiación</th>
+                <th class="min-110">Precio Unitario</th>
+                <th class="min-120">Subtotal</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="colCotizacionCantidad">
+                  <input type="number" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCantidad" value="100">
+                </td>
+                <td class="colCotizacionPrecio">
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionPrecio"  value="">   
+                  </div>
+                </td>
+                <td class="colCotizacionSetup">
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionSetup" value="" disabled>   
+                  </div>
+                </td>
+                <td class="colCotizacionCostoExtra">
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCostoExtra" value="">   
+                  </div>
+                  
+                </td>
+                <td class="colCotizacionMargen">
+                  <div class="input-group">
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionMargen" placeholder="0">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </td>
+                <td class="colCotizacionDescuento">
+                  <div class="input-group">
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionDescuento" placeholder="0">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </td>
+                <td class="colCotizacionFinanciacion">
+                  <div class="input-group">
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionFinanciacion" placeholder="0">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </td>
+                <td class="colCotizacionPrecioUnitario">
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionPrecioUnitario" value="" disabled>   
+                  </div>
+                </td>
+                <td class="colCotizacionSubtotal">
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input ype="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionSubtotal" value="" disabled>  
+                  </div>  
+                </td>
+                <td class="text-center align-middle"><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+              </tr>
+
+              <tr>
+                <td class="colCotizacionCantidad">
+                  <input type="number" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCantidad" value="200">
+                </td>
+                <td class="colCotizacionPrecio">
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionPrecio"  value="">   
+                  </div>
+                </td>
+                <td class="colCotizacionSetup">
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionSetup" value="" disabled>   
+                  </div>
+                </td>
+                <td class="colCotizacionCostoExtra">
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCostoExtra" value="">   
+                  </div>
+                  
+                </td>
+                <td class="colCotizacionMargen">
+                  <div class="input-group">
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionMargen" placeholder="0">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </td>
+                <td class="colCotizacionDescuento">
+                  <div class="input-group">
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionDescuento" placeholder="0">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </td>
+                <td class="colCotizacionFinanciacion">
+                  <div class="input-group">
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionFinanciacion" placeholder="0">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </td>
+                <td class="colCotizacionPrecioUnitario">
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionPrecioUnitario" value="" disabled>   
+                  </div>
+                </td>
+                <td class="colCotizacionSubtotal">
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input ype="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionSubtotal" value="" disabled>  
+                  </div>  
+                </td>
+                <td class="text-center align-middle"><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Cards Mobile -->
+        <div class="saved-quantities mb-3">
+          <div class="quantities-card">
+            <div class="fieldLabel" >Cantidad: <span class="fieldValue">100</span></div>
+            <div class="fieldLabel" >Precio Unitario: <span class="fieldValue">$ 8.455,00</span></div>
+            <div class="fieldLabel" >Subtotal: <span class="fieldValue">$ 845.500,00</span></div>
+            <div class="action-buttons">
+              <button href="" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></button>
+              <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+            </div>
+          </div>
+
+          <div class="quantities-card">
+            <div class="fieldLabel" >Cantidad: <span class="fieldValue">200</span></div>
+            <div class="fieldLabel" >Precio Unitario: <span class="fieldValue">$ 7.305,00</span></div>
+            <div class="fieldLabel" >Subtotal: <span class="fieldValue">$ 1.461.000,00</span></div>
+            <div class="action-buttons">
+              <button href="" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></button>
+              <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boton Desktop -->
+        <button type="button" class="btn btn-outline-secondary mb-3" style="font-size: 14px;" id="agregarCantidadDesktop"><i class="fas fa-plus"></i>Agregar cantidad</button>
+
+        <!-- Boton Mobile -->
+        <button type="button" class="btn btn-outline-secondary mt-3 w-100 d-md-none" id="agregarCantidadMobile" data-bs-toggle="offcanvas" data-bs-target="#sidebarMasElementos"><i class="fas fa-plus"></i>Agregar cantidad</button>
+      </div>
+    </div>
+
+    <!-- Botones guardado -->
+    <div class="d-flex justify-content-end mt-4">
+      <a href="detalle-cotizacion.html" type="button" class="btn btn-outline-secondary me-3">Volver a la cotización "Prueba JP"</a>
+      <button type="button" class="btn btn-primary" id="saveItemCotization"><i class="fas fa-save me-2"></i>Guardar ítem de cotización</button>
+    </div>
+  </form>
+
+  <!-- Sidebar para más elementos (Mobile) -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="sidebarMasElementos" aria-labelledby="sidebarMasElementosLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="sidebarMasElementosLabel">Cantidades</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="d-grid gap-2">
+        <!-- Campos -->
+        <label class="form-label d-block w-100">
+          <span>Cantidad</span> 
+          <input type="number" class="form-control form-control-sm mt-2" name="colCotizacionCantidad" min="1" value="100">
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Precio x Volumen</span>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionPrecio" value="$ 8.005,00" disabled>
+        </label>
+        <label class="form-label d-block w-100">
+          <span>SETUP Prorrateado</span>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionSetup" value="$ 300,00" disabled>
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Costo extra</span>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionCostoExtra" value="$ 150,00">
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Margen</span>
+          <div class="input-group mt-2">
+            <input type="number" class="form-control form-control-sm" name="colCotizacionMargen" placeholder="0" inputmode="numeric">
+            <span class="input-group-text">%</span>
+          </div>
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Descuento</span>
+          <div class="input-group mt-2">
+            <input type="number" class="form-control form-control-sm" name="colCotizacionDescuento" placeholder="0" inputmode="numeric">
+            <span class="input-group-text">%</span>
+          </div>
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Financiación</span>
+          <div class="input-group mt-2">
+            <input type="number" class="form-control form-control-sm" name="colCotizacionFinanciacion" placeholder="0" inputmode="numeric">
+            <span class="input-group-text">%</span>
+          </div>
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Precio Unitario</span>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionPrecioUnitario" value="$ 8.455,00" disabled>
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Subtotal</span>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionSubtotal" value="$ 845.500,00" disabled>
+        </label>   
+      </div>
+    </div>
+    <div class="offcanvas-footer">
+      <button type="button" class="btn btn-primary w-100">Guardar</button>
+    </div>
+  </div>
+
+  <!-- Image Selection Modal -->
+  <div class="modal-backdrop" id="imageModal" style="display: none;">
+    <div class="image-modal">
+      <div class="modal-header">
+        <h5>Seleccionar Imagen</h5>
+        <button type="button" class="close-btn" id="closeModalBtn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="image-section">
+          <h6>Imágenes subidas</h6>
+          <div class="image-grid" id="uploadedImagesGrid">
+            <!-- Uploaded images will be added here dynamically with delete buttons -->
+            <div class="upload-area">
+              <div class="upload-content">
+                <i class="fas fa-upload"></i>
+                <p>Arrastrá y soltá para agregar imágenes</p>
+                <label class="upload-btn">
+                  Examinar
+                  <input type="file" hidden id="imageUploadInput" accept="image/*" multiple>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Bootstrap bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js-scripts/select-image-modal.js"></script>
+</body>
+</html>

@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Cotizaciones</title>
+    <!-- Bootstrap 5 & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=drag_indicator" />
+    
+    <link rel="stylesheet" href="Fonts/fonts.css">
+    <link rel="stylesheet" href="Fonts/font-icons.css">
+    <link href="styles/nuevo-header.css" rel="stylesheet">
+    <link href="styles/complementos.css" rel="stylesheet">
+    <link href="styles/sidebar.css" rel="stylesheet">
+    <link href="styles/select-image-modal.css" rel="stylesheet">
+    <link href="styles/product-search-preview.css" rel="stylesheet">
+    <link href="detalle-cotizacion.css" rel="stylesheet">
+
+</head>
+<body>
+    <!-- ==========  HEADER GLOBAL  ========== -->
+    <header class="navbar navbar-dark bg-black py-3">
+        <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="https://formas.shop/app">
+            <img src="IMG/Logo Formas.shop 2025-02.png" alt="Logo" style="max-width:200px">
+        </a>
+    
+        <!-- Iconos derecha -->
+        <div class="d-flex align-items-center ms-auto">
+            <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="avatar-circle d-inline-flex align-items-center justify-content-center me-2">
+                    <i class="fa-solid fa-user"></i>
+                    </span>
+                <span class="d-none d-md-inline userDataName">Invitado</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                <span class="dropdown-item-text userDataName-mobile">Invitado</span>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/app/order/list">Mis pedidos</a></li>
+                <li><a class="dropdown-item" href="/app/order/repeat">Últimas compras</a></li>
+                <li><a class="dropdown-item" href="/app/order-cotization">Mis cotizaciones</a></li>
+                <li><a class="dropdown-item" href="/logout">Salir</a></li>
+            </ul>
+            </div>
+            <a href="" class="btn text-white position-relative"><i class="fas fa-cart-shopping fa-xl"></i>
+                <span class="position-absolute top-10 start-90 translate-middle  cart-count">2</span>
+            </a>
+        </div>
+        </div>
+    </header>
+    <main class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="#" class="back-link">
+                <i class="fas fa-chevron-left"></i> Volver a mis cotizaciones
+            </a>
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-outline-secondary me-2 d-none guardarCotizacion" data-cotization="#">
+                    Guardar cotización
+                </button>
+                <button type="button" class="tf-btn pedido-generated-btn" id="pedidoGeneratedBtn" title="Pedido generado" data-bs-toggle="modal" data-bs-target="#modalPedidoGenerado" style="display: none;">
+                    <span class="text d-none d-lg-block">Pedido Generado</span>
+                    <i class="icon fa-regular fa-check-circle"></i>
+                </button>
+                <button type="button" class="tf-btn" data-bs-toggle="modal" data-bs-target="#modalConvertirCotizacionAPedido">
+                    <span class="text d-none d-lg-block">Convertir a Pedido</span>
+                    <i class="icon fas fa-arrow-right"></i>
+                </button>
+                <button type="button" class="tf-btn" data-cotization="#" href="#">
+                    <span class="text d-none d-lg-block">Generar PDF</span>
+                    <i class="icon fas fa-file-pdf"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ==========  CONTENIDO PRINCIPAL  ========== -->
+        <div class="card">
+            <div class="card-section">
+                <div class="editable-title-wrapper mb-4">
+                    <div class="editable-title-group">
+                        <h1 class="h4 mb-0 fw-bold editable-title" contenteditable="true" id="cotizationTitle">Cotización</h1>
+                        <i class="fas fa-edit edit-btn" id="editTitleIcon"></i>
+                    </div>
+                    <div class="title-controls">
+                        <div class="image-upload-wrapper">
+                            <div class="image-preview-container" id="imagePreviewContainer" style="display: none;">
+                                <img id="imagePreview" src="" alt="Preview" class="image-preview">
+                                <button type="button" class="image-preview-remove" id="removeImageBtn" title="Eliminar imagen">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <label for="titleImageInput" class="btn btn-outline-secondary btn-sm image-upload-btn">
+                                <i class="fas fa-image me-1"></i><span class="image-upload-text">Elegir logo</span>
+                                <input type="file" id="titleImageInput" accept="image/*" hidden>
+                            </label>
+                        </div>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="titleColorPicker" class="color-picker-input" value="#000000">
+                            <label for="titleColorPicker" class="color-picker-label">
+                                <span class="color-swatch" id="colorSwatch"></span>
+                            </label>
+                        </div>
+                        <button type="button" class="duplicate-cotization-btn" id="duplicateCotizationBtn" title="Duplicar cotización">
+                            <i class="fas fa-clone"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Estructura con grid 2x2 en cada columna -->
+                <div class="row mb-5">
+                    <!-- Columna izquierda -->
+                    <div class="col-md-6 pe-md-4 mb-3 mb-md-0 border-end">
+                        <div class="row mb-0 mb-md-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="razonSocial" class="form-label">Razón Social</label>
+                                <select class="form-select" id="razonSocial" name="razonSocial">
+                                    <option value="" selected disabled>Seleccione una opción</option>
+                                    <option value="1">SBATELLA JUAN PEDRO S.A.</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="dateFrom" class="form-label">Fecha</label>
+                                <input type="text" class="form-control" id="dateFrom" name="dateFrom" value="07/04/2025" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="vendedor" class="form-label">Vendedor</label>
+                                <select class="form-select" id="vendedor" name="vendedor">
+                                    <option value="" selected disabled>Seleccione una opción</option>
+                                    <option value="1">Jorge Nitales</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="informacionAdicional" class="form-label">Información adicional</label>
+                                <input type="text" id="informacionAdicional" name="informacionAdicional" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Columna derecha-->
+                    <div class="col-md-6 ps-md-4">
+                        <div class="row mb-0 mb-md-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="configPreciosSelect" class="form-label">Configuración de precios</label>
+                                <select class="form-select" id="configPreciosSelect">
+                                    <option value="conPrecio" selected>Con precio</option>
+                                    <option value="sinPrecio">Sin precio</option>
+                                    <option value="sinPrecio&Stock">Sin precio con stock</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="precioExtraImpresion" class="form-label">Setup</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" step="any" inputmode="numeric" class="form-control" id="precioExtraImpresion" name="precioExtraImpresion" value="30000">  
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4 mb-md-0">
+                                <label for="descuentoGeneral" class="form-label">Descuento general</label>
+                                <div class="input-group">
+                                    <input type="number" step="any" inputmode="numeric" class="form-control" id="descuentoGeneral" name="descuentoGeneral" placeholder="0">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end">
+                                <!-- Botón para desktop -->
+                                <button type="button" class="btn btn-outline-secondary w-100 d-none d-md-block" data-bs-toggle="modal" data-bs-target="#modalMasElementos">
+                                    <i class="fas fa-plus"></i>Cargar cantidades
+                                </button>
+                                <!-- Botón para mobile -->
+                                <button type="button" class="btn btn-outline-secondary w-100 d-md-none" data-bs-toggle="offcanvas" data-bs-target="#sidebarMasElementos">
+                                    <i class="fas fa-plus"></i>Cargar cantidades
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="toggle-switch-wrapper">
+                            <label for="actualizarPreciosToggle" class="toggle-switch-label">
+                                <span class="toggle-switch-text">Precios actualizados</span>
+                                <input type="checkbox" id="actualizarPreciosToggle" class="toggle-switch-input">
+                                <span class="toggle-switch-slider"></span>
+                            </label>
+                        </div>
+                        <button type="button" class="refresh-icon-btn" id="refreshBtn" title="Actualizar">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="dropdown">
+                        <button class=" btn btn-secondary d-flex align-items-center dropdown-toggle" type="button" id="dropdownAgregarProductos" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="d-inline ">Agregar</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAgregarProductos">
+                            <li class="dropdown-item option text-decoration-none" id="agregarProductoDesktop" data-bs-toggle="modal" data-bs-target="#modalProductoImportado">
+                                Producto de catálogo
+                            </li>
+                            <li class="dropdown-item option text-decoration-none" id="agregarProductoDesktop" data-bs-toggle="modal" data-bs-target="#modalAgregarProductosPIC">
+                                Producto manual
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="table-responsive mb-4 rounded-3">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;"></th>
+                                <th style="width: 130px;">Producto</th>
+                                <th style="width: 250px;" class="sortable-header" data-sort="nombre">
+                                    Nombre
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th style="width: 350px;">Descripción</th>
+                                <th style="width: 100px;">Cantidad</th>
+                                <th style="width: 120px;">Precio Unitario</th>
+                                <th style="width: 120px;" class="sortable-header" data-sort="subtotal">
+                                    Subtotal
+                                    <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th style="width: 40px;"></th>
+                                <th style="width: 40px;"></th>
+                                <th style="width: 40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="item-1" class="item-container importado" data-id="#">
+                                <td class="dragItem">
+                                    <span class="material-symbols-outlined">drag_indicator</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="product-image mx-auto">
+                                        <img src="IMG/placeholder3.jpg" alt="product-img" class="product-img">
+                                    </div>
+                                </td>
+                                <td class="productName">
+                                    <div class="product-name-main">Gorro Tiger - Gris claro</div>
+                                    <div class="product-details">
+                                        <div class="product-stock">
+                                            <span class="detail-label">Stock:</span>
+                                            <span class="detail-value">150</span>
+                                        </div>
+                                        <div class="product-pvp" data-original-price="12500" data-current-price="11800">
+                                            <span class="detail-label">PVP:</span>
+                                            <span class="detail-value">$12.500,00</span>
+                                            <i class="fas fa-exclamation-triangle pvp-warning-icon" style="display: none;"></i>
+                                            <i class="fas fa-check-circle pvp-check-icon" style="display: none;"></i>
+                                        </div>
+                                        <div class="pvp-actual">
+                                            <span class="detail-label">PVP Actual:</span>
+                                            <span class="detail-value">$11.800,00</span>
+                                            <span class="price-change-indicator">
+                                                <i class="fas fa-arrow-down"></i>
+                                                <span class="price-change-percent">-5,6%</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="productDescription">
+                                    <div class="description-wrapper">
+                                        <p>Gorro de 6 paneles realizado en Cotton Flex (microfibra). Cierre velcro tipo Shiny Soft y sticker metalizado en visera. Slazeneger</p>
+                                    </div>
+                                </td>
+                                <td class="productQuantities">
+                                    <!-- Original content for desktop -->
+                                    <div class="quantities-tag">x50</div> 
+                                    <div class="quantities-tag">x100</div>
+                                    <div class="quantities-tag">x200</div>
+                                    
+                                    <!-- Mini-table for mobile -->
+                                    <div class="mini-table">
+                                        <div class="mini-section">
+                                            <div class="mini-label">Cantidades</div>
+                                            <div class="mini-content">
+                                                <div class="quantities-tag">x50</div> 
+                                                <div class="quantities-tag">x100</div>
+                                                <div class="quantities-tag">x200</div>
+                                            </div>
+                                        </div>
+                                        <div class="mini-section">
+                                            <div class="mini-label">Precio Unitario</div>
+                                            <div class="mini-content">
+                                                <div class="precio-tag">$8.455,00</div>
+                                                <div class="precio-tag">$7.305,00</div>
+                                                <div class="precio-tag">$6.805,00</div>
+                                            </div>
+                                        </div>
+                                        <div class="mini-section">
+                                            <div class="mini-label">Subtotal</div>
+                                            <div class="mini-content">
+                                                <div class="subtotal-tag">$422.750,00</div>
+                                                <div class="subtotal-tag">$730.500,00</div>
+                                                <div class="subtotal-tag">$1.361.000,00</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="productPrecioUnitario">
+                                    <div class="precio-tag">$8.455,00</div>
+                                    <div class="precio-tag">$7.305,00</div>
+                                    <div class="precio-tag">$6.805,00</div>
+                                </td>
+                                <td class="productSubtotal">
+                                    <div class="subtotal-tag">$422.750,00</div>
+                                    <div class="subtotal-tag">$730.500,00</div>
+                                    <div class="subtotal-tag">$1.361.000,00</div>
+                                </td>
+                                <td>
+                                    <a href="editItem.html" class="edit-btn" data-itemid="#"><i class="fas fa-edit edit-btn"></i></a>
+                                    <a href="editItem.html" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></a>
+                                    <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+                                    <button type="button" class="refresh-btn-mobile"><i class="fas fa-sync-alt"></i></button>
+                                </td>
+                                <td>
+                                    <button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button>
+                                </td>
+                                <td>
+                                    <button type="button" class="refresh-icon-btn"><i class="fas fa-sync-alt"></i></button>
+                                </td>
+                            </tr>
+                            <tr id="item-2" class="item-container importado" data-id="#">
+                                <td class="dragItem">
+                                    <span class="material-symbols-outlined">drag_indicator</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="product-image mx-auto">
+                                        <img src="IMG/placeholder.jpg" alt="product-img" class="product-img">
+                                    </div>
+                                </td>
+                                <td class="productName">
+                                    <div class="product-name-main">Herschel Classic Backpack</div>
+                                    <div class="product-details">
+                                        <div class="product-stock">
+                                            <span class="detail-label">Stock:</span>
+                                            <span class="detail-value">75</span>
+                                        </div>
+                                        <div class="product-pvp" data-original-price="18900" data-current-price="19950">
+                                            <span class="detail-label">PVP:</span>
+                                            <span class="detail-value">$18.900,00</span>
+                                            <i class="fas fa-exclamation-triangle pvp-warning-icon" style="display: none;"></i>
+                                            <i class="fas fa-check-circle pvp-check-icon" style="display: none;"></i>
+                                        </div>
+                                        <div class="pvp-actual">
+                                            <span class="detail-label">PVP Actual:</span>
+                                            <span class="detail-value">$19.950,00</span>
+                                            <span class="price-change-indicator">
+                                                <i class="fas fa-arrow-up"></i>
+                                                <span class="price-change-percent">+5,6%</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="productDescription">
+                                    <div class="description-wrapper">
+                                        <p>Classic
+                                            <br>
+                                            Es clásica por un motivo: es minimalista y versátil, ideal para usar todos los días. Capacidad de 20 litros.
+                                            <br>
+                                            Cuenta con un bolsillo delantero y en su compartimento principal, con una funda interior que se adapta a una laptop de 14"
+                                            <br>
+                                            Tiene cierres con tiradores de cordón y correas acolchadas ajustables para los hombros.
+                                            <br>
+                                            Material: Poliéster 600D reciclado, está elaborado con botellas de agua usadas recuperadas. Todos los  materiales reciclados de los productos Herschel pertenecen a la marca registrada EcoSystem™ 
+                                        </p>
+                                    </div>
+                                </td>
+                                <td class="productQuantities">
+                                    <!-- Original content for desktop -->
+                                    <div class="quantities-tag">x50</div> 
+                                    <div class="quantities-tag">x100</div>
+                                    <div class="quantities-tag">x200</div>
+                                    <div class="quantities-tag">x500</div>
+                                    
+                                    <!-- Mini-table for mobile -->
+                                    <div class="mini-table">
+                                        <div class="mini-section">
+                                            <div class="mini-label">Cantidades</div>
+                                            <div class="mini-content">
+                                                <div class="quantities-tag">x50</div> 
+                                                <div class="quantities-tag">x100</div>
+                                                <div class="quantities-tag">x200</div>
+                                                <div class="quantities-tag">x500</div>
+                                            </div>
+                                        </div>
+                                        <div class="mini-section">
+                                            <div class="mini-label">Precio Unitario</div>
+                                            <div class="mini-content">
+                                                <div class="precio-tag">$15.500,00</div>
+                                                <div class="precio-tag">$14.200,00</div>
+                                                <div class="precio-tag">$13.500,00</div>
+                                                <div class="precio-tag">$12.800,00</div>
+                                            </div>
+                                        </div>
+                                        <div class="mini-section">
+                                            <div class="mini-label">Subtotal</div>
+                                            <div class="mini-content">
+                                                <div class="subtotal-tag">$775.000,00</div>
+                                                <div class="subtotal-tag">$1.420.000,00</div>
+                                                <div class="subtotal-tag">$2.700.000,00</div>
+                                                <div class="subtotal-tag">$6.400.000,00</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="productPrecioUnitario">
+                                    <div class="precio-tag">$15.500,00</div>
+                                    <div class="precio-tag">$14.200,00</div>
+                                    <div class="precio-tag">$13.500,00</div>
+                                    <div class="precio-tag">$12.800,00</div>
+                                </td>
+                                <td class="productSubtotal">
+                                    <div class="subtotal-tag">$775.000,00</div>
+                                    <div class="subtotal-tag">$1.420.000,00</div>
+                                    <div class="subtotal-tag">$2.700.000,00</div>
+                                    <div class="subtotal-tag">$6.400.000,00</div>
+                                </td>
+                                <td>
+                                    <a href="editItem.html" class="edit-btn" data-itemid="#"><i class="fas fa-edit edit-btn"></i></a>
+                                    <a href="editItem.html" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></a>
+                                    <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+                                    <button type="button" class="refresh-btn-mobile"><i class="fas fa-sync-alt"></i></button>
+                                </td>
+                                <td><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button type="button" class="refresh-icon-btn"><i class="fas fa-sync-alt"></i></button></td>
+                            </tr>
+                            <tr id="item-3" class="item-container generico" data-id="#">
+                                <td class="dragItem">
+                                    <span class="material-symbols-outlined">drag_indicator</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="product-image mx-auto">
+                                        <span class="product-flag">Manual</span>
+                                        <img src="IMG/placeholderGeneric.jpg" alt="product-img" class="product-img">
+                                    </div>
+                                </td>
+                                <td class="productName">
+                                    <div class="product-name-main">Funda Impermeable | Marroquineria</div>
+                                    <div class="product-details">
+                                        <div class="product-pvp" data-original-price="3200" data-current-price="3200">
+                                            <span class="detail-label">PVP:</span>
+                                            <span class="detail-value">$3.200,00</span>
+                                            <i class="fas fa-exclamation-triangle pvp-warning-icon" style="display: none;"></i>
+                                            <i class="fas fa-check-circle pvp-check-icon"></i>
+                                        </div>
+                                        <div class="pvp-actual">
+                                            <span class="detail-label">PVP Actual:</span>
+                                            <span class="detail-value">$3.200,00</span>
+                                            <span class="price-change-indicator">
+                                                <i class="fas fa-minus"></i>
+                                                <span class="price-change-percent">0%</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="productDescription">
+                                    <div class="description-wrapper">
+                                        <p>FUNDA IMPERMEABLE PARA MOCHILA.
+                                        <br> 
+                                        CARACTERISTICAS: Funda cobertora para mochila urbana, en tela impermeable y liviana. COLOR: Negro
+                                        </p>
+                                    </div>
+                                </td>
+                                <td class="productQuantities">
+                                    <!-- Original content for desktop -->
+                                    <div class="quantities-tag">x50</div> 
+                                    <div class="quantities-tag">x100</div>
+                                    <div class="quantities-tag">x200</div>
+                                    <div class="quantities-tag">x500</div>
+                                    <div class="quantities-tag">x1000</div>
+                                    
+                                    <!-- Mini-table for mobile -->
+                                    <div class="mini-table">
+                                        <div class="mini-section">
+                                            <div class="mini-label">Cantidades</div>
+                                            <div class="mini-content">
+                                                <div class="quantities-tag">x50</div> 
+                                                <div class="quantities-tag">x100</div>
+                                                <div class="quantities-tag">x200</div>
+                                                <div class="quantities-tag">x500</div>
+                                                <div class="quantities-tag">x1000</div>
+                                            </div>
+                                        </div>
+                                        <div class="mini-section">
+                                            <div class="mini-label">Precio Unitario</div>
+                                            <div class="mini-content">
+                                                <div class="precio-tag">$2.500,00</div>
+                                                <div class="precio-tag">$2.200,00</div>
+                                                <div class="precio-tag">$2.000,00</div>
+                                                <div class="precio-tag">$1.800,00</div>
+                                                <div class="precio-tag">$1.600,00</div>
+                                            </div>
+                                        </div>
+                                        <div class="mini-section">
+                                            <div class="mini-label">Subtotal</div>
+                                            <div class="mini-content">
+                                                <div class="subtotal-tag">$125.000,00</div>
+                                                <div class="subtotal-tag">$220.000,00</div>
+                                                <div class="subtotal-tag">$400.000,00</div>
+                                                <div class="subtotal-tag">$900.000,00</div>
+                                                <div class="subtotal-tag">$1.600.000,00</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="productPrecioUnitario">
+                                    <div class="precio-tag">$2.500,00</div>
+                                    <div class="precio-tag">$2.200,00</div>
+                                    <div class="precio-tag">$2.000,00</div>
+                                    <div class="precio-tag">$1.800,00</div>
+                                    <div class="precio-tag">$1.600,00</div>
+                                </td>
+                                <td class="productSubtotal">
+                                    <div class="subtotal-tag">$125.000,00</div>
+                                    <div class="subtotal-tag">$220.000,00</div>
+                                    <div class="subtotal-tag">$400.000,00</div>
+                                    <div class="subtotal-tag">$900.000,00</div>
+                                    <div class="subtotal-tag">$1.600.000,00</div>
+                                </td>
+                                <td>
+                                    <a href="editItem-generico.html" class="edit-btn" data-itemid="#"><i class="fas fa-edit edit-btn"></i></a>
+                                    <a href="editItem-generico.html" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></a>
+                                    <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+                                    <button type="button" class="refresh-btn-mobile"><i class="fas fa-sync-alt"></i></button>
+                                </td>
+                                <td><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button type="button" class="refresh-icon-btn"><i class="fas fa-sync-alt"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row px-3 mb-4">
+                    <label for="areaObservaciones" class="form-label">Observaciones de la cotización</label>
+                    <textarea class="form-control" id="areaObservaciones">Los valores mencionados no incluyen IVA. Validez del presupuesto: 72 hs. Condición de pago: Transferencia</textarea>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para Cargar cantidades Desktop-->
+    <div class="modal fade" id="modalMasElementos" tabindex="-1" aria-labelledby="modalMasElementosLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalMasElementosLabel">Cargar cantidades</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Tabla -->
+                    <div class="table-responsive mb-2 rounded-3">
+                        <table class="table table-modal">
+                            <thead><tr><th style="width: 180px; min-width: 110px">Cantidad</th><th style="width: 180px; min-width: 110px">Costo extra</th><th style="width: 180px; min-width: 110px">Margen</th><th style="width: 180px; min-width: 110px">Descuento</th><th style="width: 180px; min-width: 110px">Financiación</th><th></th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td class="colCotizacionCantidad">
+                                    <input type="number" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCantidad" value="50">
+                                </td>
+                                <td class="colCotizacionCostoExtra">
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCostoExtra">   
+                                    </div>
+                                </td>
+                                <td class="colCotizacionMargen">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionMargen" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="colCotizacionDescuento">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionDescuento" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="colCotizacionFinanciacion">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionFinanciacion" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle"><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td class="colCotizacionCantidad">
+                                    <input type="number" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCantidad" value="100">
+                                </td>
+                                <td class="colCotizacionCostoExtra">
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCostoExtra">   
+                                    </div>
+                                </td>
+                                <td class="colCotizacionMargen">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionMargen" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="colCotizacionDescuento">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionDescuento" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="colCotizacionFinanciacion">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionFinanciacion" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle"><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td class="colCotizacionCantidad">
+                                    <input type="number" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCantidad" value="200">
+                                </td>
+                                <td class="colCotizacionCostoExtra">
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCostoExtra">   
+                                    </div>
+                                </td>
+                                <td class="colCotizacionMargen">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionMargen" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="colCotizacionDescuento">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionDescuento" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="colCotizacionFinanciacion">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionFinanciacion" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle"><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary mb-2" style="font-size: 14px;" id="agregarCantidadDesktop"><i class="fas fa-plus"></i>Agregar cantidad</button>
+                    
+                    <!-- Mensaje de atención -->
+                    <div class="alert alert-warning mt-3 mb-0" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Atención:</strong> Al guardar, se actualizarán y reemplazarán las configuraciones previas.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar para Cargar cantidades (Mobile) -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="sidebarMasElementos" aria-labelledby="sidebarMasElementosLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebarMasElementosLabel">Cargar cantidades</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <!-- Contenido scrollable -->
+            <div class="sidebar-content">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-secondary mb-2" type="button" id="btnAgregarCantidades">
+                        Agregar cantidades
+                    </button>
+                    <div class="saved-quantities mb-3">
+                        <div class="quantities-card">
+                            <div class="fieldLabel" >Cantidad: <span class="fieldValue">50</span></div>
+                            <div class="fieldLabel" >Costo extra: <span class="fieldValue"></span></div>
+                            <div class="fieldLabel" >Margen: <span class="fieldValue"></span></div>
+                            <div class="fieldLabel" >Descuento: <span class="fieldValue"></span></div>
+                            <div class="fieldLabel" >Financiación: <span class="fieldValue"></span></div>
+                            <div class="action-buttons">
+                            <button href="" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></button>
+                            <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+                            </div>
+                        </div>
+                        <div class="quantities-card">
+                            <div class="fieldLabel" >Cantidad: <span class="fieldValue">100</span></div>
+                            <div class="fieldLabel" >Costo extra: <span class="fieldValue"></span></div>
+                            <div class="fieldLabel" >Margen: <span class="fieldValue"></span></div>
+                            <div class="fieldLabel" >Descuento: <span class="fieldValue"></span></div>
+                            <div class="fieldLabel" >Financiación: <span class="fieldValue"></span></div>
+                            <div class="action-buttons">
+                            <button href="" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></button>
+                            <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+                            </div>
+                        </div>
+                        <div class="quantities-card">
+                            <div class="fieldLabel" >Cantidad: <span class="fieldValue">200</span></div>
+                            <div class="fieldLabel" >Costo extra: <span class="fieldValue"></span></div>
+                            <div class="fieldLabel" >Margen: <span class="fieldValue"></span></div>
+                            <div class="fieldLabel" >Descuento: <span class="fieldValue"></span></div>
+                            <div class="fieldLabel" >Financiación: <span class="fieldValue"></span></div>
+                            <div class="action-buttons">
+                            <button href="" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></button>
+                            <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar anidado para Agregar Cantidades -->
+            <div class="nested-sidebar" id="nestedSidebar">
+                <div class="nested-sidebar-header">
+                    <button type="button" class="btn-back" id="btnBackNestedSidebar">
+                        <i class="fas fa-chevron-left"></i>
+                        <h5>Agregar cantidades</h5>
+                    </button>
+                </div>
+                <div class="nested-sidebar-body">
+                    <!-- Campos adicionales -->
+                    <label class="form-label d-block w-100">
+                        <span>Cantidad</span> 
+                        <input type="number" class="form-control mt-2" name="colCotizacionCantidad" min="1" >
+                    </label>
+                    <label class="form-label d-block w-100">
+                        <span>Costo extra</span>
+                        <input type="text" class="form-control mt-2" name="colCotizacionCostoExtra">
+                    </label>
+                    <label class="form-label d-block w-100">
+                        <span>Margen</span>
+                        <div class="input-group mt-2">
+                            <input type="number" class="form-control" name="colCotizacionMargen" placeholder="0" inputmode="numeric">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </label>
+                    <label class="form-label d-block w-100">
+                        <span>Descuento</span>
+                        <div class="input-group mt-2">
+                            <input type="number" class="form-control" name="colCotizacionDescuento" placeholder="0" inputmode="numeric">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </label>
+                    <label class="form-label d-block w-100">
+                        <span>Financiación</span>
+                        <div class="input-group mt-2">
+                            <input type="number" class="form-control" name="colCotizacionFinanciacion" placeholder="0" inputmode="numeric">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </label>
+                </div>
+                <div class="nested-sidebar-footer">
+                    <button type="button" class="btn btn-outline-secondary w-100">Agregar</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer fijo del sidebar -->
+        <div class="offcanvas-footer">
+            <!-- Mensaje de atención -->
+            <div class="alert alert-warning mb-3" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Atención:</strong> Al guardar, se actualizarán y reemplazarán las configuraciones previas.
+            </div>
+            
+            <!-- Botones principales del sidebar -->
+            <div class="d-grid gap-2">
+                <button type="button" class="btn btn-primary">Guardar cambios</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar producto PIC-->
+    <div class="modal fade" id="modalAgregarProductosPIC" tabindex="-1" aria-labelledby="modalAgregarProductosPICLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarProductosPICLabel">Nuevo Producto Manual</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- ===== Información básica del producto ===== -->
+                        <div class="col-md-4">
+                            <label class="form-label" for="PICProductName">Producto*</label>
+                            <input type="text" class="form-control" id="PICProductName" name="productName" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label" for="PICProductType">Tipo de producto*</label>
+                            <select class="form-select" required id="PICProductType" name="productType">
+                                <option value="" disabled selected>Selecciona un tipo</option>
+                                <option value="ProduccionSimple">Producción Simple</option>
+                                <option value="Desarrollo">Desarrollo</option>
+                                <option value="Importacion">Importación</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label" for="newProductCategory">Categoría*</label>
+                            <select class="form-select" required id="newProductCategory">
+                                <option value="" disabled selected>Seleciona una categoría</option>
+                                <option value="Antiestres">Antiestrés</option>
+                                <option value="Drinkware">Drinkware</option>
+                                <option value="Escritura">Escritura</option>
+                                <option value="Grafico&Institucional">Gráfico & Institucional</option>
+                                <option value="Health&Beauty">Health & Beauty</option>
+                                <option value="Hogar&TiempoLibre">Hogar & Tiempo libre</option>
+                                <option value="Llaveros">Llaveros</option>
+                                <option value="Marroquineria">Marroquinería</option>
+                                <option value="Oficina">Oficina</option>
+                                <option value="Tecnologia">Tecnología</option>
+                                <option value="Textil">Textil</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label" for="PICDescription">Descripción</label>
+                            <textarea class="form-control" id="PICDescription" name="description" rows="3" spellcheck="true"></textarea>
+                        </div>
+                    </div>
+                    <div class="image-section py-3 my-3" style="border-top: 1px solid #eee; border-bottom: 1px solid #eee">
+                        <div class="image-grid" id="uploadedImagesGrid">
+                        <!-- Uploaded images will be added here dynamically with delete buttons -->
+                        <div class="upload-area">
+                            <div class="upload-content">
+                            <i class="fas fa-upload"></i>
+                            <p>Arrastrá y soltá para agregar imágenes</p>
+                            <label class="upload-btn">
+                                Examinar
+                                <input type="file" hidden id="imageUploadInput" accept="image/*" multiple>
+                            </label>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label">Configuración de Precios*</label>
+                            
+                            <!-- Pricing Mode Toggle -->
+                            <div class="pricing-mode-toggle mb-3">
+                                <div class="toggle-container">
+                                    <input type="radio" id="singlePriceMode" name="pricingMode" value="single" checked>
+                                    <label for="singlePriceMode" class="toggle-option">
+                                        <i class="fas fa-tag"></i>
+                                        <span>Precio Único</span>
+                                    </label>
+                                    
+                                    <input type="radio" id="quantityPriceMode" name="pricingMode" value="quantity">
+                                    <label for="quantityPriceMode" class="toggle-option">
+                                        <i class="fas fa-list-ol"></i>
+                                        <span>Por Cantidades</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Single Price Mode -->
+                            <div id="singlePriceContainer" class="pricing-container">
+                                <div class="single-price-card">
+                                    <div class="single-price-body">
+                                        <div class="single-price-field">
+                                            <label class="form-label" for="singlePriceInput">PVP/Costo</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">$</span>
+                                                <input type="number" step="any" inputmode="numeric" class="form-control" id="singlePriceInput">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quantity-based Price Mode -->
+                            <div id="quantityPriceContainer" class="pricing-container" style="display: none;">
+                                <div id="quantitiesContainer" class="mb-2">
+                                    <!-- First card - static in HTML -->
+                                    <div class="quantity-card" id="quantity-card-0">
+                                        <div class="quantity-card-body">
+                                            <div class="quantity-card-fields">
+                                                <div class="quantity-field">
+                                                    <label class="form-label" for="ProductQuantity">Cantidad</label>
+                                                    <input type="number" inputmode="numeric" class="form-control" id="ProductQuantity">
+                                                </div>
+                                                <div class="PVPCosto-field">
+                                                    <label class="form-label" for="PVPCosto">PVP/Costo</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">$</span>
+                                                        <input type="number" step="any" inputmode="numeric" class="form-control" id="PVPCosto">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="quantity-card-actions">
+                                                <button type="button" class="delete-btn" onclick="quantityManager.deleteQuantityCard(0)" title="Eliminar cantidad">
+                                                    <i class="far fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary mb-3 w-100" style="font-size: 14px;" id="addQuantityBtn">
+                                    <i class="fas fa-plus"></i>Agregar cantidad
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Producto Importado -->
+    <div class="modal fade" id="modalProductoImportado" tabindex="-1" aria-labelledby="modalProductoImportadoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalProductoImportadoLabel">
+                        Seleccionar Productos Importados
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Search Bar -->
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" class="form-control" id="productSearch" placeholder="Buscar productos por nombre, SKU o descripción...">  
+                            <span class="input-group-text" type="button" id="clearSearch" style="display: none;">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Selected Products Preview -->
+                    <div class="selected-products-preview" id="selectedProductsPreview" style="display: none;">
+                      <div class="preview-header">
+                        <h6 class="preview-title">
+                          <i class="fas fa-check-circle"></i>
+                          Productos seleccionados (<span id="selectedCount">0</span>)
+                        </h6>
+                        <button type="button" class="btn btn-sm btn-outline-danger" id="clearAllSelected">
+                          <i class="fas fa-trash me-1"></i>Limpiar todo
+                        </button>
+                      </div>
+                      <div class="selected-products-list" id="selectedProductsList"></div>
+                    </div>
+                    
+                    <!-- Search Placeholder -->
+                    <div class="search-placeholder" id="searchPlaceholder">
+                        <i class="fas fa-search fa-2x mb-3"></i>
+                        <p>Ingresa un término de búsqueda para encontrar productos</p>
+                    </div>
+                    
+                    <!-- Search Results -->
+                    <div class="search-results" id="searchResults" style="display: none;"></div>
+                    
+                    <!-- No Results Message -->
+                    <div class="no-results" id="noResults" style="display: none;">
+                        <i class="fas fa-search fa-2x mb-3"></i>
+                        <p>No se encontraron productos que coincidan con tu búsqueda.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="addSelectedProducts" disabled>
+                        Agregar productos seleccionados
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Convertir Cotización a Pedido -->
+    <div class="modal fade" id="modalConvertirCotizacionAPedido" tabindex="-1" aria-labelledby="modalConvertirCotizacionAPedidoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalConvertirCotizacionAPedidoLabel">Convertir Cotización a Pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form Step -->
+                    <div id="modalFormStep" class="modal-step">
+                        <div class="row g-3">
+                            <!-- Información de la Cotización -->
+                            <div class="col-md-6">
+                                <label for="modalNumeroPDV" class="form-label">Fecha</label>
+                                <input type="text" id="modalFecha" name="modalFecha" class="form-control" value="" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modalNumeroPDV" class="form-label">Número de PDV</label>
+                                <input type="text" id="modalNumeroPDV" name="modalNumeroPDV" class="form-control" value="" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modalRazonSocial" class="form-label">Razón Social</label>
+                                <select class="form-select" id="modalRazonSocial" name="modalRazonSocial">
+                                    <option value="" selected disabled>Seleccione una opción</option>
+                                    <option value="1">SBATELLA JUAN PEDRO S.A.</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modalFormaPago" class="form-label">Forma de pago</label>
+                                <select class="form-select" id="modalFormaPago" name="modalFormaPago">
+                                    <option value="" selected disabled>Seleccione una opción</option>
+                                    <option value="1">Efectivo</option>
+                                    <option value="2">Transferencia Bancaria</option>
+                                    <option value="3">Tarjeta de Crédito</option>
+                                    <option value="4">Cheque a 30 días</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modalVendedor" class="form-label">Vendedor</label>
+                                <select class="form-select" id="modalVendedor" name="modalVendedor">
+                                    <option value="" selected disabled>Seleccione una opción</option>
+                                    <option value="1">Jorge Nitales</option>
+
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modalOC" class="form-label">OC</label>
+                                <input type="text" id="modalOC" name="modalOC" class="form-control" value="">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modalDireccionEntrega" class="form-label">Dirección de entrega</label>
+                                <input type="text" id="modalDireccionEntrega" name="modalDireccionEntrega" class="form-control" value="">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="modalFechaEntrega" class="form-label">Fecha de entrega</label>
+                                <input type="text" class="form-control" id="modalFechaEntrega" name="modalFechaEntrega" value="">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Es evento</label>
+                                <div class="pricing-mode-toggle mb-0">
+                                    <div class="toggle-container" style="height: 38px;">
+                                        <input type="radio" id="modalEsEventoSi" name="modalEsEvento" value="si">
+                                        <label for="modalEsEventoSi" class="toggle-option">
+                                            <i class="fas fa-check"></i>
+                                            <span>Sí</span>
+                                        </label>
+                                        
+                                        <input type="radio" id="modalEsEventoNo" name="modalEsEvento" value="no" checked>
+                                        <label for="modalEsEventoNo" class="toggle-option">
+                                            <i class="fas fa-times"></i>
+                                            <span>No</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="modalDescripcion" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="modalDescripcion" name="modalDescripcion" rows="3"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Simplified Product Table -->
+                        <div class="mt-4">
+                            <h6 class="mb-3">Productos</h6>
+                            <div class="table-responsive rounded-3">
+                                <table class="table table-sm modal-products-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 40px; text-align: center;">
+                                                <input type="checkbox" id="modalSelectAll" class="form-check-input">
+                                            </th>
+                                            <th>Producto</th>
+                                            <th>Descripción</th>
+                                            <th style="width: 150px;">Cantidad</th>
+                                            <th style="width: 130px;">Precio Unitario</th>
+                                            <th style="width: 130px;">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="modalProductsTableBody">
+                                        <!-- Products will be populated dynamically -->
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="5" class="text-end fw-bold">TOTAL:</td>
+                                            <td class="fw-bold" id="modalTotalAmount">$0,00</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Confirmation Step -->
+                    <div id="modalConfirmationStep" class="modal-step" style="display: none;">
+                        <div class="alert alert-info" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Por favor, revise la información antes de confirmar la conversión.
+                        </div>
+                        
+                        <div class="row g-3">
+                            <!-- Información del Pedido -->
+                            <div class="col-md-6">
+                                <label for="confirmationFecha" class="form-label">Fecha</label>
+                                <div class="form-control-plaintext" id="confirmationFecha">-</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirmationNumeroPDV" class="form-label">Número de PDV</label>
+                                <div class="form-control-plaintext" id="confirmationNumeroPDV">-</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirmationRazonSocial" class="form-label">Razón Social</label>
+                                <div class="form-control-plaintext" id="confirmationRazonSocial">-</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirmationFormaPago" class="form-label">Forma de pago</label>
+                                <div class="form-control-plaintext" id="confirmationFormaPago">-</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirmationVendedor" class="form-label">Vendedor</label>
+                                <div class="form-control-plaintext" id="confirmationVendedor">-</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirmationOC" class="form-label">OC</label>
+                                <div class="form-control-plaintext" id="confirmationOC">-</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirmationDireccionEntrega" class="form-label">Dirección de entrega</label>
+                                <div class="form-control-plaintext" id="confirmationDireccionEntrega">-</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="confirmationFechaEntrega" class="form-label">Fecha de entrega</label>
+                                <div class="form-control-plaintext" id="confirmationFechaEntrega">-</div>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="confirmationEsEvento" class="form-label">Es evento</label>
+                                <div class="form-control-plaintext" id="confirmationEsEvento">No</div>
+                            </div>
+                            <div class="col-12">
+                                <label for="confirmationDescripcion" class="form-label">Descripción</label>
+                                <div class="form-control-plaintext" id="confirmationDescripcion">-</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Products Confirmation Table -->
+                        <div class="mt-4">
+                            <h6 class="mb-3">Productos</h6>
+                            <div class="table-responsive rounded-3">
+                                <table class="table table-sm modal-products-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Descripción</th>
+                                            <th>Cantidad</th>
+                                            <th style="width: 130px;">Precio Unitario</th>
+                                            <th style="width: 130px;">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="confirmationProductsTableBody">
+                                        <!-- Products will be populated dynamically -->
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4" class="text-end fw-bold">TOTAL:</td>
+                                            <td class="fw-bold" id="confirmationTotalAmount">$0,00</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modalCancelBtn" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" id="modalBackBtn" style="display: none;">Volver</button>
+                    <button type="button" class="btn btn-primary" id="modalConvertBtn">Convertir</button>
+                    <button type="button" class="btn btn-primary" id="modalConfirmBtn" style="display: none;">
+                        <i class="fas fa-check me-2"></i>Confirmar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Pedido Generado -->
+    <div class="modal fade" id="modalPedidoGenerado" tabindex="-1" aria-labelledby="modalPedidoGeneradoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalPedidoGeneradoLabel">
+                        <i class="fas fa-check-circle text-success me-2"></i>Pedido Generado
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        El pedido ha sido generado exitosamente.
+                    </div>
+                    
+                    <div class="row g-3">
+                        <!-- Información del Pedido -->
+                        <div class="col-md-6">
+                            <label for="reportFecha" class="form-label">Fecha</label>
+                            <div class="form-control-plaintext" id="reportFecha">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="reportNumeroPDV" class="form-label">Número de PDV</label>
+                            <div class="form-control-plaintext" id="reportNumeroPDV">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="reportRazonSocial" class="form-label">Razón Social</label>
+                            <div class="form-control-plaintext" id="reportRazonSocial">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="reportFormaPago" class="form-label">Forma de pago</label>
+                            <div class="form-control-plaintext" id="reportFormaPago">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="reportVendedor" class="form-label">Vendedor</label>
+                            <div class="form-control-plaintext" id="reportVendedor">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="reportOC" class="form-label">OC</label>
+                            <div class="form-control-plaintext" id="reportOC">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="reportDireccionEntrega" class="form-label">Dirección de entrega</label>
+                            <div class="form-control-plaintext" id="reportDireccionEntrega">-</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="reportFechaEntrega" class="form-label">Fecha de entrega</label>
+                            <div class="form-control-plaintext" id="reportFechaEntrega">-</div>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="reportEsEvento" class="form-label">Es evento</label>
+                            <div class="form-control-plaintext" id="reportEsEvento">No</div>
+                        </div>
+                        <div class="col-12">
+                            <label for="reportDescripcion" class="form-label">Descripción</label>
+                            <div class="form-control-plaintext" id="reportDescripcion">-</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Products Report Table -->
+                    <div class="mt-4">
+                        <h6 class="mb-3">Productos</h6>
+                        <div class="table-responsive rounded-3">
+                            <table class="table table-sm modal-products-table">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Descripción</th>
+                                        <th>Cantidad</th>
+                                        <th style="width: 130px;">Precio Unitario</th>
+                                        <th style="width: 130px;">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportProductsTableBody">
+                                    <!-- Products will be populated dynamically -->
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" class="text-end fw-bold">TOTAL:</td>
+                                        <td class="fw-bold" id="reportTotalAmount">$0,00</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">
+                        <i class="fas fa-download me-2"></i>Descargar Reporte
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="js-scripts/sidebar-nested.js"></script>
+    <script src="js-scripts/drag-and-drop-items.js"></script>
+    <script src="js-scripts/add-quantity-manager.js"></script>
+    <script src="js-scripts/image-upload-manager.js"></script>
+    <script src="js-scripts/product-search.js"></script>
+    <script src="js-scripts/editable-title.js"></script>
+    <script src="js-scripts/title-controls.js"></script>
+    <script src="js-scripts/table-sorting.js"></script>
+    <script src="js-scripts/modal-products-table.js"></script>
+    <script src="js-scripts/price-update-indicator.js"></script>
+    <script src="js-scripts/modal-conversion-flow.js"></script>
+</body>
+</html>
