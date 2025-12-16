@@ -1,15 +1,12 @@
-// JS basic demo
+// Image modal functionality for detalle-cotizacion.html
 document.addEventListener('DOMContentLoaded', () => {
-
-    // Original functionality
-    document.getElementById('agregarCantidadDesktop').addEventListener('click', () => alert('Agregar nueva fila'));
-    document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', () => alert('Eliminar fila')));
-    document.getElementById('saveItemCotization').addEventListener('click', () => alert('Guardado'));
     
     // Image storage and management
     let lastDeletedImage = null;
     let uploadedImages = [];
-    let currentSelectedImageUrl = document.getElementById('selectedProductImage').src;
+    let currentSelectedImageUrl = null;
+    let currentProductRow = null; // Track which product row is being edited
+    let currentUploadArea = null; // Track the current upload area element
     
     // Multi-select functionality
     let multiSelectMode = false;
@@ -59,14 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Clipboard paste functionality
-    document.addEventListener('paste', handlePaste, false);
-
     function handlePaste(e) {
-        // Only handle paste events when the modal is open
+        // Only handle paste events when the image modal is open
         const modal = document.getElementById('imageModal');
-        const isModalOpen = modal && modal.style.display === 'flex';
-        
-        if (!isModalOpen) return;
+        if (!modal || modal.style.display !== 'flex') return;
         
         const clipboardData = e.clipboardData || window.clipboardData;
         const items = clipboardData.items;
@@ -97,12 +90,22 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Render uploaded images in the grid
     function renderUploadedImages() {
-      const uploadedImagesGrid = document.getElementById('uploadedImagesGrid');
+      if (!uploadedImagesGrid) return;
+      
+      // Find the current upload area (it might be in the modal)
+      const uploadAreaElement = uploadedImagesGrid.querySelector('.upload-area');
+      if (!uploadAreaElement) return;
       
       // Clear existing uploaded images (except the upload area)
-      const uploadArea = uploadedImagesGrid.querySelector('.upload-area');
+      const uploadAreaClone = uploadAreaElement.cloneNode(true);
       uploadedImagesGrid.innerHTML = '';
-      uploadedImagesGrid.appendChild(uploadArea);
+      uploadedImagesGrid.appendChild(uploadAreaClone);
+      
+      // Re-setup drag and drop after rendering
+      currentUploadArea = setupDragAndDrop();
+      
+      // Re-setup file input handler after rendering
+      setupFileInputHandler();
       
       // Add each uploaded image
       uploadedImages.forEach((image, index) => {
@@ -149,43 +152,77 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // JS for image modal
-    const selectImageBtn = document.getElementById('selectImageBtn');
     const imageModal = document.getElementById('imageModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const selectedProductImage = document.getElementById('selectedProductImage');
-    const imageUploadInput = document.getElementById('imageUploadInput');
-    const selectMultipleBtn = document.getElementById('selectMultipleBtn');
+    if (!imageModal) {
+      console.warn('Image modal not found');
+      return;
+    }
+    
+    // Get elements scoped to the image modal
+    const closeModalBtn = imageModal.querySelector('#closeModalBtn');
+    const selectMultipleBtn = imageModal.querySelector('#selectMultipleBtn');
+    const uploadedImagesGrid = imageModal.querySelector('#uploadedImagesGrid');
+    const imageUploadInput = imageModal.querySelector('#imageUploadInput');
+    const uploadArea = imageModal.querySelector('.upload-area');
+    
+    if (!closeModalBtn || !selectMultipleBtn || !uploadedImagesGrid || !imageUploadInput || !uploadArea) {
+      console.warn('Image modal elements not found', {
+        closeModalBtn: !!closeModalBtn,
+        selectMultipleBtn: !!selectMultipleBtn,
+        uploadedImagesGrid: !!uploadedImagesGrid,
+        imageUploadInput: !!imageUploadInput,
+        uploadArea: !!uploadArea
+      });
+      return;
+    }
     
     // Load saved images when page loads
     loadSavedImages();
     
+    // Attach paste handler after modal is defined
+    document.addEventListener('paste', handlePaste, false);
+    
     // Toggle multi-select mode
     selectMultipleBtn.addEventListener('click', () => {
-      if (!multiSelectMode) {
-        // Enter multi-select mode
-        multiSelectMode = true;
+      multiSelectMode = !multiSelectMode;
+      
+      if (multiSelectMode) {
         selectMultipleBtn.classList.add('active');
-        selectMultipleBtn.innerHTML = 'Guardar selección';
+        selectMultipleBtn.innerHTML = '<i class="fas fa-check-square me-1"></i>Cancelar selección';
         // Clear single selection when entering multi-select mode
         document.querySelectorAll('.image-item').forEach(item => {
           item.classList.remove('selected-image');
         });
       } else {
-        // Save selection and exit multi-select mode
-        applySelectedImages();
-        multiSelectMode = false;
         selectMultipleBtn.classList.remove('active');
         selectMultipleBtn.innerHTML = '<i class="fas fa-check-square me-1"></i>Seleccionar varias';
-        // Close the modal after saving
-        imageModal.style.display = 'none';
         // Clear multi-select selections
         selectedImages = [];
         updateMultiSelectDisplay();
+        highlightSelectedImage();
       }
     });
     
-    // Open modal
-    selectImageBtn.addEventListener('click', () => {
+    // Setup file input handler using event delegation on the modal
+    function setupFileInputHandler() {
+      // Use event delegation on the modal to catch file input changes
+      // This way it works even when the upload area is recreated
+      imageModal.addEventListener('change', (e) => {
+        if (e.target && e.target.id === 'imageUploadInput' && e.target.type === 'file') {
+          if (e.target.files && e.target.files.length > 0) {
+            handleFiles(e.target.files);
+            // Reset the file input
+            e.target.value = '';
+          }
+        }
+      }, true); // Use capture phase to catch early
+    }
+    
+    // Open modal when clicking on product images in the table
+    function openImageModal(productImg, productRow) {
+      currentProductRow = productRow;
+      currentSelectedImageUrl = productImg.src;
+      
       imageModal.style.display = 'flex';
       multiSelectMode = false;
       selectedImages = [];
@@ -193,67 +230,121 @@ document.addEventListener('DOMContentLoaded', () => {
       selectMultipleBtn.innerHTML = '<i class="fas fa-check-square me-1"></i>Seleccionar varias';
       highlightSelectedImage();
       updateMultiSelectDisplay();
+      
+      // Re-setup drag and drop when modal opens (in case upload area was recreated)
+      currentUploadArea = setupDragAndDrop();
+      
+      // Re-setup file input handler
+      setupFileInputHandler();
+    }
+    
+    // Function to setup click handlers for product images
+    function setupProductImageHandlers() {
+      document.querySelectorAll('.product-image img.product-img').forEach(img => {
+        // Make the image container clickable
+        const productImageContainer = img.closest('.product-image');
+        if (productImageContainer && !productImageContainer.classList.contains('clickable-image')) {
+          productImageContainer.style.cursor = 'pointer';
+          productImageContainer.classList.add('clickable-image');
+          
+          // Add hover icon if it doesn't exist
+          if (!productImageContainer.querySelector('.image-hover-icon')) {
+            const hoverIcon = document.createElement('i');
+            hoverIcon.className = 'fas fa-image image-hover-icon';
+            productImageContainer.appendChild(hoverIcon);
+          }
+          
+          productImageContainer.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const productRow = img.closest('tr');
+            openImageModal(img, productRow);
+          });
+        }
+      });
+    }
+    
+    // Initial setup
+    setupProductImageHandlers();
+    
+    // Use MutationObserver to handle dynamically added product rows
+    const tableObserver = new MutationObserver((mutations) => {
+      setupProductImageHandlers();
     });
+    
+    const tableBody = document.querySelector('table tbody');
+    if (tableBody) {
+      tableObserver.observe(tableBody, {
+        childList: true,
+        subtree: true
+      });
+    }
     
     // Apply selected images and close modal
     function applySelectedImages() {
+      if (!currentProductRow) return;
+      
+      const productImg = currentProductRow.querySelector('.product-img');
+      if (!productImg) return;
+      
       if (multiSelectMode && selectedImages.length > 0) {
-        // Update main product image to first selected image
-        selectedProductImage.src = selectedImages[0].url;
+        // Update product image to first selected image
+        productImg.src = selectedImages[0].url;
         currentSelectedImageUrl = selectedImages[0].url;
         
         // Store all selected images for potential future use
-        // You can access them via selectedImages array
         console.log('Selected images:', selectedImages.map(img => img.url));
+      } else if (!multiSelectMode && currentSelectedImageUrl) {
+        // Single select mode - already updated in handleImageSelect
+        productImg.src = currentSelectedImageUrl;
       }
     }
     
     // Close modal
     closeModalBtn.addEventListener('click', () => {
-      // Only apply if not in multi-select mode
-      if (!multiSelectMode) {
-        applySelectedImages();
-      }
+      applySelectedImages();
       imageModal.style.display = 'none';
       // Reset multi-select mode when closing
       multiSelectMode = false;
       selectedImages = [];
       selectMultipleBtn.classList.remove('active');
       selectMultipleBtn.innerHTML = '<i class="fas fa-check-square me-1"></i>Seleccionar varias';
-      updateMultiSelectDisplay();
+      currentProductRow = null;
     });
     
     // Close modal when clicking outside
     imageModal.addEventListener('click', (e) => {
       if (e.target === imageModal) {
-        // Only apply if not in multi-select mode
-        if (!multiSelectMode) {
-          applySelectedImages();
-        }
+        applySelectedImages();
         imageModal.style.display = 'none';
         // Reset multi-select mode when closing
         multiSelectMode = false;
         selectedImages = [];
         selectMultipleBtn.classList.remove('active');
         selectMultipleBtn.innerHTML = '<i class="fas fa-check-square me-1"></i>Seleccionar varias';
-        updateMultiSelectDisplay();
+        currentProductRow = null;
       }
     });
     
     // Highlight the currently selected image in the modal
     function highlightSelectedImage() {
+      if (!currentSelectedImageUrl) return;
+      
       // Remove selected class from all images
       document.querySelectorAll('.image-item').forEach(item => {
         item.classList.remove('selected-image');
       });
       
       // Add selected class to the currently selected image
-      const currentImageUrl = selectedProductImage.src;
-      
       document.querySelectorAll('.image-item').forEach(item => {
         const itemImageUrl = item.getAttribute('data-image');
-        if (itemImageUrl && currentImageUrl.includes(itemImageUrl)) {
-          item.classList.add('selected-image');
+        if (itemImageUrl) {
+          // Check if URLs match (handle both relative and absolute paths)
+          const currentUrl = currentSelectedImageUrl.split('/').pop();
+          const itemUrl = itemImageUrl.split('/').pop();
+          if (currentUrl === itemUrl || currentSelectedImageUrl.includes(itemImageUrl) || itemImageUrl.includes(currentSelectedImageUrl)) {
+            item.classList.add('selected-image');
+          }
         }
       });
     }
@@ -270,7 +361,6 @@ document.addEventListener('DOMContentLoaded', () => {
         handleMultiSelect(imageItem, imageUrl);
       } else {
         // Single select mode
-        selectedProductImage.src = imageUrl;
         currentSelectedImageUrl = imageUrl;
         
         // Update the selected class
@@ -281,6 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Close the modal
         imageModal.style.display = 'none';
+        applySelectedImages();
       }
     }
     
@@ -394,53 +485,63 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     
-    // Handle file upload for multiple files
-    imageUploadInput.addEventListener('change', (e) => {
-      if (e.target.files && e.target.files.length > 0) {
-        handleFiles(e.target.files);
-        // Reset the file input
-        imageUploadInput.value = '';
-      }
-    });
+    // File input handler is now set up via setupFileInputHandler() function
     
-    // Drag and drop functionality
-    const uploadArea = document.querySelector('.upload-area');
-
-    // Prevent default drag behaviors
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      uploadArea.addEventListener(eventName, preventDefaults, false);
-    });
-
-    function preventDefaults(e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    // Highlight drop area when item is dragged over it
-    ['dragenter', 'dragover'].forEach(eventName => {
-      uploadArea.addEventListener(eventName, highlight, false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-      uploadArea.addEventListener(eventName, unhighlight, false);
-    });
-
-    function highlight() {
-      uploadArea.classList.add('highlight');
-    }
-
-    function unhighlight() {
-      uploadArea.classList.remove('highlight');
-    }
-
-    // Handle dropped files (multiple)
-    uploadArea.addEventListener('drop', handleDrop, false);
-    function handleDrop(e) {
-      const dt = e.dataTransfer;
-      const files = dt.files;
+    // Drag and drop functionality - setup when modal opens
+    function setupDragAndDrop() {
+      // Find the current upload area in the modal (it might have been recreated)
+      const uploadAreaElement = imageModal.querySelector('.upload-area');
+      if (!uploadAreaElement) return null;
       
-      if (files && files.length > 0) {
-        handleFiles(files);
+      // Remove existing listeners to avoid duplicates by cloning
+      const newUploadArea = uploadAreaElement.cloneNode(true);
+      uploadAreaElement.parentNode.replaceChild(newUploadArea, uploadAreaElement);
+      
+      // Prevent default drag behaviors
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        newUploadArea.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
       }
+
+      // Highlight drop area when item is dragged over it
+      ['dragenter', 'dragover'].forEach(eventName => {
+        newUploadArea.addEventListener(eventName, highlight, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        newUploadArea.addEventListener(eventName, unhighlight, false);
+      });
+
+      function highlight() {
+        newUploadArea.classList.add('highlight');
+      }
+
+      function unhighlight() {
+        newUploadArea.classList.remove('highlight');
+      }
+
+      // Handle dropped files (multiple)
+      newUploadArea.addEventListener('drop', handleDrop, false);
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files && files.length > 0) {
+          handleFiles(files);
+        }
+      }
+      
+      return newUploadArea;
     }
+    
+    // Setup drag and drop initially
+    currentUploadArea = setupDragAndDrop();
+    
+    // Setup file input handler initially
+    setupFileInputHandler();
 });
+

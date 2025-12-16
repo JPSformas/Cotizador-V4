@@ -38,11 +38,23 @@
   font-weight: bold;
 }
 
+.modal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .close-btn {
   background: none;
   border: none;
   font-size: 18px;
   cursor: pointer;
+}
+
+#selectMultipleBtn.active {
+  background-color: #3269ba;
+  color: white;
+  border-color: #3269ba;
 }
 
 .modal-body {
@@ -89,6 +101,31 @@
 .image-item.selected-image {
   border: 2px solid #3269ba;
   box-shadow: 0 0 4px rgba(102, 206, 247, 0.5);
+}
+
+/* Multi-select mode styling */
+.image-item.multi-selected {
+  border: 2px solid #3269ba;
+  box-shadow: 0 0 4px rgba(102, 206, 247, 0.5);
+}
+
+/* Selection number badge */
+.selection-number-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #3269ba;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .image-item img {
@@ -139,7 +176,10 @@
 
 .upload-content {
   text-align: center;
-  padding: 20px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .upload-content i {
