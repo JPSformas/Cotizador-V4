@@ -57,9 +57,6 @@
                 <i class="fas fa-chevron-left"></i> Volver a mis cotizaciones
             </a>
             <div class="d-flex align-items-center gap-2">
-                <button type="button" class="btn btn-outline-secondary me-2 d-none guardarCotizacion" data-cotization="#">
-                    Guardar cotización
-                </button>
                 <button type="button" class="tf-btn pedido-generated-btn" id="pedidoGeneratedBtn" title="Pedido generado" data-bs-toggle="modal" data-bs-target="#modalPedidoGenerado" style="display: none;">
                     <span class="text d-none d-lg-block">Pedido Generado</span>
                     <i class="icon fa-regular fa-check-circle"></i>
@@ -71,6 +68,10 @@
                 <button type="button" class="tf-btn" data-cotization="#" href="#">
                     <span class="text d-none d-lg-block">Generar PDF</span>
                     <i class="icon fas fa-file-pdf"></i>
+                </button>
+                <button type="button" class="tf-btn" data-cotization="#" href="#">
+                    <span class="text d-none d-lg-block">Guardar cotización</span>
+                    <i class="icon fas fa-save"></i>
                 </button>
             </div>
         </div>
@@ -114,10 +115,40 @@
                         <div class="row mb-0 mb-md-3">
                             <div class="col-md-6 mb-3 mb-md-0">
                                 <label for="razonSocial" class="form-label">Razón Social</label>
-                                <select class="form-select" id="razonSocial" name="razonSocial">
-                                    <option value="" selected disabled>Seleccione una opción</option>
-                                    <option value="1">SBATELLA JUAN PEDRO S.A.</option>
-                                </select>
+                                <div class="autocomplete-wrapper" data-field-id="razonSocial">
+                                    <div class="autocomplete-input-group">
+                                        <input type="text" 
+                                               class="form-select autocomplete-input" 
+                                               id="razonSocial" 
+                                               name="razonSocial" 
+                                               placeholder="Buscar"
+                                               autocomplete="off"
+                                               data-selected-id=""
+                                               data-selected-value="">
+                                        <button type="button" 
+                                                class="autocomplete-create-btn" 
+                                                id="razonSocialCreateBtn"
+                                                aria-label="Crear nueva razón social"
+                                                title="Crear nueva razón social">
+                                            <i class="fas fa-user-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="autocomplete-dropdown" id="razonSocialDropdown" style="display: none;">
+                                        <div class="autocomplete-loading" id="razonSocialLoading" style="display: none;">
+                                            <i class="fas fa-spinner fa-spin"></i> <span>Buscando...</span>
+                                        </div>
+                                        <div class="autocomplete-results" id="razonSocialResults">
+                                            <!-- Results will be populated here -->
+                                        </div>
+                                        <div class="autocomplete-no-results" id="razonSocialNoResults" style="display: none;">
+                                            <div class="text-muted p-2">No se encontraron resultados</div>
+                                        </div>
+                                        <div class="autocomplete-footer" id="razonSocialFooter" style="display: none;">
+                                            <small class="text-muted">Mostrando <span id="razonSocialResultsCount">0</span> de <span id="razonSocialTotalCount">0</span> resultados</small>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="razonSocialId" name="razonSocialId" value="">
+                                </div>
                             </div>
                             <div class="col-md-6 mb-3 mb-md-0">
                                 <label for="dateFrom" class="form-label">Fecha</label>
@@ -315,17 +346,13 @@
                                     <div class="subtotal-tag">$730.500,00</div>
                                     <div class="subtotal-tag">$1.361.000,00</div>
                                 </td>
+                                <td><a href="editItem.html" class="edit-btn" data-itemid="#"><i class="fas fa-edit edit-btn"></i></a></td>
+                                <td><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button type="button" class="refresh-icon-btn"><i class="fas fa-sync-alt"></i></button></td>
                                 <td>
-                                    <a href="editItem.html" class="edit-btn" data-itemid="#"><i class="fas fa-edit edit-btn"></i></a>
                                     <a href="editItem.html" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></a>
                                     <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
                                     <button type="button" class="refresh-btn-mobile"><i class="fas fa-sync-alt"></i></button>
-                                </td>
-                                <td>
-                                    <button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button>
-                                </td>
-                                <td>
-                                    <button type="button" class="refresh-icon-btn"><i class="fas fa-sync-alt"></i></button>
                                 </td>
                             </tr>
                             <tr id="item-2" class="item-container importado" data-id="#">
@@ -424,14 +451,14 @@
                                     <div class="subtotal-tag">$2.700.000,00</div>
                                     <div class="subtotal-tag">$6.400.000,00</div>
                                 </td>
+                                <td><a href="editItem.html" class="edit-btn" data-itemid="#"><i class="fas fa-edit edit-btn"></i></a></td>
+                                <td><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button type="button" class="refresh-icon-btn"><i class="fas fa-sync-alt"></i></button></td>
                                 <td>
-                                    <a href="editItem.html" class="edit-btn" data-itemid="#"><i class="fas fa-edit edit-btn"></i></a>
                                     <a href="editItem.html" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></a>
                                     <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
                                     <button type="button" class="refresh-btn-mobile"><i class="fas fa-sync-alt"></i></button>
                                 </td>
-                                <td><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
-                                <td><button type="button" class="refresh-icon-btn"><i class="fas fa-sync-alt"></i></button></td>
                             </tr>
                             <tr id="item-3" class="item-container generico" data-id="#">
                                 <td class="dragItem">
@@ -526,14 +553,14 @@
                                     <div class="subtotal-tag">$900.000,00</div>
                                     <div class="subtotal-tag">$1.600.000,00</div>
                                 </td>
+                                <td><a href="editItem-generico.html" class="edit-btn" data-itemid="#"><i class="fas fa-edit edit-btn"></i></a></td>
+                                <td><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button type="button" class="refresh-icon-btn"><i class="fas fa-sync-alt"></i></button></td>
                                 <td>
-                                    <a href="editItem-generico.html" class="edit-btn" data-itemid="#"><i class="fas fa-edit edit-btn"></i></a>
                                     <a href="editItem-generico.html" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></a>
                                     <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
                                     <button type="button" class="refresh-btn-mobile"><i class="fas fa-sync-alt"></i></button>
                                 </td>
-                                <td><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
-                                <td><button type="button" class="refresh-icon-btn"><i class="fas fa-sync-alt"></i></button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -1010,10 +1037,40 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="modalRazonSocial" class="form-label">Razón Social</label>
-                                <select class="form-select" id="modalRazonSocial" name="modalRazonSocial">
-                                    <option value="" selected disabled>Seleccione una opción</option>
-                                    <option value="1">SBATELLA JUAN PEDRO S.A.</option>
-                                </select>
+                                <div class="autocomplete-wrapper" data-field-id="modalRazonSocial">
+                                    <div class="autocomplete-input-group">
+                                        <input type="text" 
+                                               class="form-select autocomplete-input" 
+                                               id="modalRazonSocial" 
+                                               name="modalRazonSocial" 
+                                               placeholder="Seleccione una opción"
+                                               autocomplete="off"
+                                               data-selected-id=""
+                                               data-selected-value="">
+                                        <button type="button" 
+                                                class="autocomplete-create-btn" 
+                                                id="modalRazonSocialCreateBtn"
+                                                aria-label="Crear nueva razón social"
+                                                title="Crear nueva razón social">
+                                            <i class="fas fa-user-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="autocomplete-dropdown" id="modalRazonSocialDropdown" style="display: none;">
+                                        <div class="autocomplete-loading" id="modalRazonSocialLoading" style="display: none;">
+                                            <i class="fas fa-spinner fa-spin"></i> <span>Buscando...</span>
+                                        </div>
+                                        <div class="autocomplete-results" id="modalRazonSocialResults">
+                                            <!-- Results will be populated here -->
+                                        </div>
+                                        <div class="autocomplete-no-results" id="modalRazonSocialNoResults" style="display: none;">
+                                            <div class="text-muted p-2">No se encontraron resultados</div>
+                                        </div>
+                                        <div class="autocomplete-footer" id="modalRazonSocialFooter" style="display: none;">
+                                            <small class="text-muted">Mostrando <span id="modalRazonSocialResultsCount">0</span> de <span id="modalRazonSocialTotalCount">0</span> resultados</small>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="modalRazonSocialId" name="modalRazonSocialId" value="">
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="modalFormaPago" class="form-label">Forma de pago</label>
@@ -1300,6 +1357,7 @@
     <script src="js-scripts/table-sorting.js"></script>
     <script src="js-scripts/modal-products-table.js"></script>
     <script src="js-scripts/price-update-indicator.js"></script>
+    <script src="js-scripts/razon-social-autocomplete.js"></script>
     <script src="js-scripts/modal-conversion-flow.js"></script>
 </body>
 </html>

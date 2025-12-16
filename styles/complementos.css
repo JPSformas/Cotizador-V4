@@ -3,7 +3,7 @@
   /* Main shop colors - Formas.shop */
   --primary: #8cc63f;
   --main: #181818;
-  --secondary: #4d4e4f;
+  --secondary: #6c757d;
   --secondary-2: #a0a0a0;
   --brand-primary: #8cc63f;
   --brand-primary-rgb: 140, 198, 63;
@@ -361,9 +361,7 @@
 .tf-btn span {
   color: inherit;
 }
-.tf-btn .icon {
-  font-size: 22px;
-}
+
 .tf-btn .text,
 .tf-btn .icon {
   position: relative;

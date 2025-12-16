@@ -69,7 +69,7 @@ body {
 }
 
 textarea.form-control {
-  height: 230px;
+  height: 140px;
 }
 
 .table {
@@ -138,6 +138,23 @@ th.min-xl,td.min-xl { min-width: 170px; }
   display: none;
 }
 
+.tf-btn:not(.btn-reset):after {
+  bottom: -180% !important;
+  width: 102% !important;
+  height: 150% !important;
+  transition: transform 800ms cubic-bezier(0.48, 0, 0.12, 1) !important;
+  transform: skewY(9.3deg) scaleY(0) !important;
+}
+.tf-btn:not(.btn-reset):hover::after {
+  transform-origin: bottom center !important;
+  transform: skewY(9.3deg) scaleY(3) !important;
+}
+.tf-btn.btn-white::after {
+  background-color: var(--secondary) !important;
+}
+.tf-btn.btn-white.has-border:hover {
+  border-color: var(--secondary) !important;
+}
 @media (max-width: 1200px) {
   .row.mb-4 {
     max-width: 90%;

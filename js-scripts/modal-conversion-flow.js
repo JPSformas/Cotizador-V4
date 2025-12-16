@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function getFormData() {
         const modalFecha = document.getElementById('modalFecha');
         const modalRazonSocial = document.getElementById('modalRazonSocial');
+        // Get selected value from autocomplete
+        const razonSocialValue = window.getRazonSocialValue && window.getRazonSocialValue('modalRazonSocial');
         const modalVendedor = document.getElementById('modalVendedor');
         const modalFormaPago = document.getElementById('modalFormaPago');
         const modalNumeroPDV = document.getElementById('modalNumeroPDV');
@@ -47,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return {
             fecha: modalFecha?.value || '-',
             numeroPDV: modalNumeroPDV?.value || '-',
-            razonSocial: modalRazonSocial?.selectedOptions[0]?.textContent || '-',
+            razonSocial: razonSocialValue?.nombre || modalRazonSocial?.value || '-',
             vendedor: modalVendedor?.selectedOptions[0]?.textContent || '-',
             formaPago: modalFormaPago?.selectedOptions[0]?.textContent || '-',
             oc: modalOC?.value || '-',

@@ -23,7 +23,7 @@
 <header class="navbar navbar-dark bg-black py-3">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center" href="https://formas.shop/app">
-      <img src="IMG/Logo Formas.shop 2025-02.png" alt="Logo" style="max-height:30px">
+      <img src="IMG/Logo Formas.shop 2025-02.png" alt="Logo" style="max-width:200px">
     </a>
 
     <!-- Iconos derecha -->
@@ -51,14 +51,14 @@
   </div>
 </header>
 
-<!-- ==========  CONTENIDO PRINCIPAL  ========== -->
 <main class="container py-4">
   <div class="d-flex justify-content-start align-items-center mb-4">
     <a href="detalle-cotizacion.html" class="back-link">
         <i class="fas fa-chevron-left"></i> Volver a detalle de cotización
     </a>
   </div>
-
+  
+  <!-- ==========  CONTENIDO PRINCIPAL  ========== -->
   <form>
     <div class="card">
       <!-- Información Básica -->
@@ -68,7 +68,7 @@
         <div class="row">
           <div class="col-md-3  mb-3 mb-md-0">
             <div class="product-image mb-3"><img src="IMG/placeholder3.jpg" class="product-img" id="selectedProductImage"></div>
-            <button type="button" class="btn btn-outline-secondary w-100" id="selectImageBtn">Seleccionar imagen</button>
+            <button type="button" class="btn btn-outline-secondary w-100" id="selectImageBtn"><i class="fas fa-image me-1"></i>Seleccionar imagen</button>
           </div>
           <div class="col-md-9">
             <div class="row mb-3">
@@ -81,15 +81,26 @@
                 <input type="text" id="SKU" name="SKU" class="form-control" value="ZEC_20037000001D55D55D63" disabled>
               </div>
             </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="tiempoProduccion" class="form-label">Tiempo de produccion</label>
+                <input type="text" id="tiempoProduccion" name="tiempoProduccion" class="form-control" placeholder="10-12 días hábiles">
+              </div>
+            </div>
             <label for="Descripcion" class="form-label">Descripción del producto</label>
-            <textarea id="Descripcion" name="Descripcion" class="form-control" rows="3">Gorro de 6 paneles realizado en Cotton Flex (microfibra). Cierre velcro tipo Shiny Soft y sticker metalizado en visera. Slazeneger</textarea>
+            <textarea id="Descripcion" name="Descripcion" class="form-control" rows="3">Gorro de 6 paneles realizado en Cotton Flex (microfibra). Cierre velcro tipo Shiny Soft y sticker metalizado en visera. Slazeneger</textarea>            
           </div>
         </div>
       </div>
 
       <!-- Configuración de precios -->
       <div class="card-section">
-        <h2 class="h5 mb-4">Configuración de Precios</h2>
+        <div class="d-inline-flex align-items-center gap-2 mb-4">
+          <h2 class="h5 mb-0">Configuración de Precios</h2>
+          <button type="button" class="refresh-icon-btn" id="refreshBtn" title="Actualizar">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
         <div class="mb-4">
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="priceOption" id="printOptionPrice" value="conPrecio" checked>
@@ -306,9 +317,17 @@
     </div>
 
     <!-- Botones guardado -->
-    <div class="d-flex justify-content-end mt-4">
-      <a href="detalle-cotizacion.html" type="button" class="btn btn-outline-secondary me-3">Volver a la cotización "Prueba JP"</a>
-      <button type="button" class="btn btn-primary" id="saveItemCotization"><i class="fas fa-save me-2"></i>Guardar ítem de cotización</button>
+    <div class="d-flex justify-content-end mt-4 gap-3">
+      <button href="detalle-cotizacion.html" type="button" class="tf-btn btn-white has-border">
+        <a href="detalle-cotizacion.html" class="d-flex justify-content-start align-items-center gap-2 text-decoration-none text-reset">
+          <i class="icon fas fa-chevron-left"></i>
+          <span class="text d-none d-lg-block">Volver a la cotización "Prueba JP"</span>
+        </a>
+      </button>
+      <button type="button" class="tf-btn" id="saveItemCotization">
+        <span class="text d-none d-lg-block">Guardar ítem de cotización</span>
+        <i class="icon fas fa-save"></i>
+      </button>
     </div>
   </form>
 
