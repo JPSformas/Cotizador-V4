@@ -116,7 +116,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const elementId = `${prefix}${fieldMap[key]}`;
             const element = document.getElementById(elementId);
             if (element) {
-                element.textContent = data[key];
+                // Special handling for PDV field to show loading state (only in report modal)
+                if (key === 'numeroPDV' && prefix === 'report') {
+                    const loadingElement = document.getElementById('reportNumeroPDVLoading');
+                    const valueElement = element;
+                    
+                    // Show loading state if PDV is not available (empty, "-", or null)
+                    const pdvValue = String(data[key] || '').trim();
+                    if (!pdvValue || pdvValue === '-') {
+                        if (loadingElement) loadingElement.style.display = 'inline-flex';
+                        if (valueElement) valueElement.style.display = 'none';
+                    } else {
+                        if (loadingElement) loadingElement.style.display = 'none';
+                        if (valueElement) {
+                            valueElement.style.display = 'inline-block';
+                            valueElement.textContent = pdvValue;
+                        }
+                    }
+                } else {
+                    element.textContent = data[key];
+                }
             }
         });
     }
@@ -269,6 +288,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if (reportModal) {
         reportModal.addEventListener('show.bs.modal', function() {
             populatePDVReport();
+            
+            // Check and show loading state for PDV if needed
+            const pdvElement = document.getElementById('reportNumeroPDV');
+            const pdvLoadingElement = document.getElementById('reportNumeroPDVLoading');
+            if (pdvElement && pdvLoadingElement) {
+                const pdvValue = pdvElement.textContent.trim();
+                if (!pdvValue || pdvValue === '-') {
+                    pdvLoadingElement.style.display = 'inline-flex';
+                    pdvElement.style.display = 'none';
+                } else {
+                    pdvLoadingElement.style.display = 'none';
+                    pdvElement.style.display = 'inline-block';
+                }
+            }
         });
     }
 });

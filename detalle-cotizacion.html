@@ -1272,7 +1272,13 @@
                         </div>
                         <div class="col-md-6">
                             <label for="reportNumeroPDV" class="form-label">Número de PDV</label>
-                            <div class="form-control-plaintext" id="reportNumeroPDV">-</div>
+                            <div class="form-control-plaintext pdv-field-wrapper" id="reportNumeroPDVWrapper">
+                                <span class="pdv-loading-state" id="reportNumeroPDVLoading" style="display: none;">
+                                    <i class="fas fa-spinner fa-spin me-2"></i>
+                                    <span class="text-muted">Procesando...</span>
+                                </span>
+                                <span class="pdv-value" id="reportNumeroPDV">-</span>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label for="reportRazonSocial" class="form-label">Razón Social</label>

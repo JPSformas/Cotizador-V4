@@ -744,6 +744,29 @@ textarea.form-control {
   border-bottom: 1px solid transparent;
 }
 
+/* PDV Loading State */
+.pdv-field-wrapper {
+  display: flex;
+  align-items: center;
+  min-height: 1.5rem;
+}
+
+.pdv-loading-state {
+  display: inline-flex;
+  align-items: center;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.pdv-loading-state i {
+  font-size: 0.875rem;
+  color: #0d6efd;
+}
+
+.pdv-value {
+  display: inline-block;
+}
+
 .modal-products-table tbody td {
   padding: 0.375rem 0.375rem;
   vertical-align: middle;
