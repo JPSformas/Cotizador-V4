@@ -184,22 +184,26 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Toggle multi-select mode
     selectMultipleBtn.addEventListener('click', () => {
-      multiSelectMode = !multiSelectMode;
-      
-      if (multiSelectMode) {
+      if (!multiSelectMode) {
+        // Enter multi-select mode
+        multiSelectMode = true;
         selectMultipleBtn.classList.add('active');
-        selectMultipleBtn.innerHTML = '<i class="fas fa-check-square me-1"></i>Cancelar selección';
+        selectMultipleBtn.innerHTML = 'Guardar selección';
         // Clear single selection when entering multi-select mode
         document.querySelectorAll('.image-item').forEach(item => {
           item.classList.remove('selected-image');
         });
       } else {
+        // Save selection and exit multi-select mode
+        applySelectedImages();
+        multiSelectMode = false;
         selectMultipleBtn.classList.remove('active');
         selectMultipleBtn.innerHTML = '<i class="fas fa-check-square me-1"></i>Seleccionar varias';
+        // Close the modal after saving
+        imageModal.style.display = 'none';
         // Clear multi-select selections
         selectedImages = [];
         updateMultiSelectDisplay();
-        highlightSelectedImage();
       }
     });
     
