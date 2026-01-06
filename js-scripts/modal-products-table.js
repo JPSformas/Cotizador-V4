@@ -27,7 +27,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         mainTableRows.forEach((row, index) => {
             const productName = row.querySelector('.product-name-main')?.textContent.trim() || '';
-            const productDescription = row.querySelector('.productDescription p')?.textContent.trim() || '';
+            // Get description HTML content, handling nested p tags
+            const descriptionElement = row.querySelector('.productDescription .description-wrapper');
+            const productDescription = descriptionElement ? descriptionElement.innerHTML.trim() : 
+                                      (row.querySelector('.productDescription p')?.textContent.trim() || '');
             
             // Extract quantities and prices
             const quantities = [];
@@ -96,8 +99,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="checkbox" class="form-check-input product-checkbox" data-product-index="${index}" checked>
                 </td>
                 <td>${product.name}</td>
-                <td>${product.description}</td>
-                <td>
+                <td><div class="description-wrapper-modal">${product.description}</div></td>
+                <td class="quantity-cell">
                     <select class="form-select quantity-select" data-product-index="${index}">
                         ${product.quantities.map((qty, qtyIdx) => 
                             `<option value="${qtyIdx}" ${qtyIdx === defaultQtyIndex ? 'selected' : ''}>${qty.text}</option>`

@@ -73,7 +73,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const checkbox = row.querySelector('.product-checkbox');
             if (checkbox && checkbox.checked) {
                 const productName = row.cells[1]?.textContent.trim() || '';
-                const productDescription = row.cells[2]?.textContent.trim() || '';
+                // Get description HTML content, handling description-wrapper-modal
+                const descriptionCell = row.cells[2];
+                const descriptionWrapper = descriptionCell?.querySelector('.description-wrapper-modal');
+                const productDescription = descriptionWrapper ? descriptionWrapper.innerHTML.trim() : 
+                                         (descriptionCell?.textContent.trim() || '');
                 const quantitySelect = row.querySelector('.quantity-select');
                 const quantity = quantitySelect?.selectedOptions[0]?.textContent || '';
                 const priceCell = row.querySelector('.price-cell');
@@ -150,8 +154,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${product.name}</td>
-                <td>${product.description}</td>
-                <td>${product.quantity}</td>
+                <td><div class="description-wrapper-modal">${product.description}</div></td>
+                <td class="quantity-cell">${product.quantity}</td>
                 <td class="price-cell">${product.price}</td>
                 <td class="subtotal-cell">${product.subtotal}</td>
             `;

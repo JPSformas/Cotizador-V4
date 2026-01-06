@@ -345,20 +345,45 @@ body {
   overflow: hidden;
 }
 
+/* Product name and description columns */
+.modal-products-table tbody td:nth-child(1),
+.modal-products-table tbody td:nth-child(2),
 .modal-products-table tbody td:nth-child(3) {
-  /* Description column */
-  max-width: 200px;
+  max-width: 190px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.modal-products-table tbody td:nth-child(2) {
-  /* Product name column */
-  max-width: 200px;
+/* Description wrapper for modal tables */
+.modal-products-table tbody td .description-wrapper-modal {
+  max-height: 48px;
   overflow: hidden;
+  line-height: 1.5;
+  display: block;
+  position: relative;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.modal-products-table tbody td .description-wrapper-modal p {
+  margin: 0;
+  padding: 0;
+  display: inline;
+  line-height: 1.5;
+}
+
+.modal-products-table tbody td .description-wrapper-modal p:not(:last-child)::after {
+  content: ' ';
+  white-space: pre;
+}
+
+.modal-products-table tbody td .description-wrapper-modal p br {
+  display: none;
+}
+
+.modal-products-table .quantity-cell {
+  width: 80px;
+  text-align: center;
 }
 
 .modal-products-table tfoot {
@@ -765,21 +790,6 @@ textarea.form-control {
 
 .pdv-value {
   display: inline-block;
-}
-
-.modal-products-table tbody td {
-  padding: 0.375rem 0.375rem;
-  vertical-align: middle;
-  max-height: 48px;
-  overflow: hidden;
-}
-
-.modal-products-table tbody td:nth-child(1),
-.modal-products-table tbody td:nth-child(2) {
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 /* Modal Step Transitions */
