@@ -129,7 +129,9 @@
                                                 class="autocomplete-create-btn" 
                                                 id="razonSocialCreateBtn"
                                                 aria-label="Crear nueva razón social"
-                                                title="Crear nueva razón social">
+                                                title="Crear nueva razón social"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalCrearCliente">
                                             <i class="fas fa-user-plus"></i>
                                         </button>
                                     </div>
@@ -1051,7 +1053,9 @@
                                                 class="autocomplete-create-btn" 
                                                 id="modalRazonSocialCreateBtn"
                                                 aria-label="Crear nueva razón social"
-                                                title="Crear nueva razón social">
+                                                title="Crear nueva razón social"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalCrearCliente">
                                             <i class="fas fa-user-plus"></i>
                                         </button>
                                     </div>
@@ -1350,6 +1354,60 @@
             </div>
         </div>
     </div>
+    <!-- Modal Crear Cliente -->
+    <div class="modal fade" id="modalCrearCliente" tabindex="-1" aria-labelledby="modalCrearClienteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCrearClienteLabel">Crear Nuevo Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCrearCliente">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="clienteNombre" class="form-label">Nombre*</label>
+                                <input type="text" class="form-control" id="clienteNombre" name="nombre" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="clienteRazonSocial" class="form-label">Razón Social*</label>
+                                <input type="text" class="form-control" id="clienteRazonSocial" name="razonSocial" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="clienteCategoriaFiscal" class="form-label">Categoría Fiscal*</label>
+                                <select class="form-select" id="clienteCategoriaFiscal" name="categoriaFiscal" required>
+                                    <option value="" disabled selected>Seleccione una opción</option>
+                                    <option value="Consumidor Final">Consumidor Final</option>
+                                    <option value="Exento">Exento</option>
+                                    <option value="Monotributista">Monotributista</option>
+                                    <option value="Responsable Inscripto">Responsable Inscripto</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="clienteIdentificacionTributaria" class="form-label">Identificación Tributaria*</label>
+                                <select class="form-select" id="clienteIdentificacionTributaria" name="identificacionTributaria" required>
+                                    <option value="" disabled selected>Seleccione una opción</option>
+                                    <option value="C.U.I.T">C.U.I.T</option>
+                                    <option value="C.U.I.L">C.U.I.L</option>
+                                    <option value="D.N.I.">D.N.I.</option>
+                                    <option value="Sin Identificacion">Sin Identificación</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="clienteValorIdentificacion" class="form-label">Valor identificación tributaria*</label>
+                                <input type="text" class="form-control" id="clienteValorIdentificacion" name="valorIdentificacion" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarCliente">Guardar Cliente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Image Selection Modal -->
     <div class="modal-backdrop" id="imageModal" style="display: none;">
       <div class="image-modal">
@@ -1429,5 +1487,6 @@
     <script src="js-scripts/razon-social-autocomplete.js"></script>
     <script src="js-scripts/modal-conversion-flow.js"></script>
     <script src="js-scripts/table-select-image-modal.js"></script>
+    <script src="js-scripts/crear-cliente-modal.js"></script>
 </body>
 </html>
