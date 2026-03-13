@@ -51,12 +51,6 @@
   cursor: pointer;
 }
 
-#selectMultipleBtn.active {
-  background-color: #3269ba;
-  color: white;
-  border-color: #3269ba;
-}
-
 .modal-body {
   padding: 24px;
   overflow-y: auto;

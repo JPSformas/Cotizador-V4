@@ -7,9 +7,15 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
+    // Store original order of rows for neutral state (index = order in DOM)
+    const rows = Array.from(tableBody.querySelectorAll('tr.item-container'));
+    rows.forEach((row, index) => {
+        row.setAttribute('data-original-index', index);
+    });
+    
     let currentSort = {
         column: null,
-        direction: null // 'asc' or 'desc'
+        direction: null // null = neutral, 'asc', or 'desc'
     };
     
     // Helper function to parse currency value to number
@@ -56,45 +62,54 @@ document.addEventListener('DOMContentLoaded', function() {
         return minValue === Infinity ? 0 : minValue;
     }
     
-    // Sort function
+    // Sort function (direction can be null for neutral = restore original order)
     function sortTable(column, direction) {
         const rows = Array.from(tableBody.querySelectorAll('tr.item-container'));
         
-        rows.sort((a, b) => {
-            let aValue, bValue;
-            
-            if (column === 'nombre') {
-                // Sort alphabetically by product name
-                const aName = a.querySelector('.product-name-main')?.textContent.trim() || '';
-                const bName = b.querySelector('.product-name-main')?.textContent.trim() || '';
-                aValue = aName.toLowerCase();
-                bValue = bName.toLowerCase();
-            } else if (column === 'subtotal') {
-                // Sort by highest or lowest subtotal based on direction
-                if (direction === 'asc') {
-                    // Ascending = lowest first
-                    aValue = getLowestSubtotal(a);
-                    bValue = getLowestSubtotal(b);
-                } else {
-                    // Descending = highest first
-                    aValue = getHighestSubtotal(a);
-                    bValue = getHighestSubtotal(b);
+        if (direction === null) {
+            // Neutral: restore original order
+            rows.sort((a, b) => {
+                const aIdx = parseInt(a.getAttribute('data-original-index'), 10) || 0;
+                const bIdx = parseInt(b.getAttribute('data-original-index'), 10) || 0;
+                return aIdx - bIdx;
+            });
+        } else {
+            rows.sort((a, b) => {
+                let aValue, bValue;
+                
+                if (column === 'nombre') {
+                    // Sort alphabetically by product name
+                    const aName = a.querySelector('.product-name-main')?.textContent.trim() || '';
+                    const bName = b.querySelector('.product-name-main')?.textContent.trim() || '';
+                    aValue = aName.toLowerCase();
+                    bValue = bName.toLowerCase();
+                } else if (column === 'subtotal') {
+                    // Sort by highest or lowest subtotal based on direction
+                    if (direction === 'asc') {
+                        // Ascending = lowest first
+                        aValue = getLowestSubtotal(a);
+                        bValue = getLowestSubtotal(b);
+                    } else {
+                        // Descending = highest first
+                        aValue = getHighestSubtotal(a);
+                        bValue = getHighestSubtotal(b);
+                    }
                 }
-            }
-            
-            // Compare values
-            if (column === 'nombre') {
-                // String comparison
-                if (aValue < bValue) return direction === 'asc' ? -1 : 1;
-                if (aValue > bValue) return direction === 'asc' ? 1 : -1;
-                return 0;
-            } else {
-                // Numeric comparison
-                if (aValue < bValue) return direction === 'asc' ? -1 : 1;
-                if (aValue > bValue) return direction === 'asc' ? 1 : -1;
-                return 0;
-            }
-        });
+                
+                // Compare values
+                if (column === 'nombre') {
+                    // String comparison
+                    if (aValue < bValue) return direction === 'asc' ? -1 : 1;
+                    if (aValue > bValue) return direction === 'asc' ? 1 : -1;
+                    return 0;
+                } else {
+                    // Numeric comparison
+                    if (aValue < bValue) return direction === 'asc' ? -1 : 1;
+                    if (aValue > bValue) return direction === 'asc' ? 1 : -1;
+                    return 0;
+                }
+            });
+        }
         
         // Clear table body
         tableBody.innerHTML = '';
@@ -106,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Add click event listeners to sortable headers
+    // Cycle: neutral → asc → desc → neutral
     sortableHeaders.forEach(header => {
         const sortIcon = header.querySelector('.sort-icon');
         
@@ -121,31 +137,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // Determine sort direction
+            // Cycle direction: neutral → asc → desc → neutral (when same column)
             if (currentSort.column === sortType) {
-                // Toggle direction if clicking the same column
-                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                if (currentSort.direction === 'asc') {
+                    currentSort.direction = 'desc';
+                } else if (currentSort.direction === 'desc') {
+                    currentSort.direction = null; // neutral
+                } else {
+                    currentSort.direction = 'asc';
+                }
             } else {
-                // Default to ascending for new column
+                // New column: start with ascending
                 currentSort.direction = 'asc';
             }
             
-            currentSort.column = sortType;
+            currentSort.column = currentSort.direction !== null ? sortType : null;
             
-            // Add sort class to current header
-            this.classList.add(`sort-${currentSort.direction}`);
-            
-            // Update icon based on sort direction
-            if (sortIcon) {
-                if (currentSort.direction === 'asc') {
-                    sortIcon.className = 'fas fa-sort-up sort-icon';
-                } else {
-                    sortIcon.className = 'fas fa-sort-down sort-icon';
+            // Add sort class and icon only when not neutral
+            if (currentSort.direction !== null) {
+                this.classList.add(`sort-${currentSort.direction}`);
+                if (sortIcon) {
+                    sortIcon.className = currentSort.direction === 'asc'
+                        ? 'fas fa-sort-up sort-icon'
+                        : 'fas fa-sort-down sort-icon';
                 }
             }
+            // else: header already has default fa-sort from the reset above
             
-            // Sort the table
-            sortTable(sortType, currentSort.direction);
+            // Sort the table (pass current column when neutral so we still know which column to "restore" for)
+            sortTable(currentSort.column !== null ? currentSort.column : sortType, currentSort.direction);
         });
     });
 });

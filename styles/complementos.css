@@ -143,8 +143,8 @@
   transform: scale(1.1);
 }
 
-/* Refresh icon button styles */
-.refresh-icon-btn {
+/* Refresh & Duplicate icon button styles */
+.refresh-icon-btn, .duplicate-icon-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -157,14 +157,13 @@
   width: 24px;
   height: 24px;
 }
-
+.duplicate-icon-btn:hover {
+  color: #0d6efd;
+  transform: scale(1.1);
+}
 .refresh-icon-btn:hover {
   color: #0d6efd;
   transform: rotate(180deg);
-}
-
-.refresh-icon-btn:active {
-  transform: rotate(360deg);
 }
 
 .refresh-icon-btn:disabled,
@@ -181,8 +180,8 @@
 }
 
 .edit-btn-mobile, 
-.delete-btn-mobile, 
-.refresh-btn-mobile {
+.delete-btn-mobile,
+.duplicate-btn-mobile {
   display: none;
   border: none;
   text-decoration: none;
@@ -193,7 +192,7 @@
 .delete-btn-mobile {
   color:#ff4d4f
 }
-.refresh-btn-mobile {
+.duplicate-btn-mobile {
   background: none;
   border: none;
   cursor: pointer;
@@ -204,27 +203,6 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-}
-.refresh-btn-mobile:hover {
-  color: #0d6efd;
-  transform: rotate(180deg);
-}
-
-.refresh-btn-mobile:active {
-  transform: rotate(360deg);
-}
-
-.refresh-btn-mobile:disabled,
-.refresh-btn-mobile.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.refresh-btn-mobile:disabled:hover,
-.refresh-btn-mobile.disabled:hover {
-  color: #555;
-  transform: none;
 }
 
 .checkItem {

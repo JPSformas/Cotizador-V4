@@ -11,9 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let uploadedImages = [];
     let currentSelectedImageUrl = document.getElementById('selectedProductImage').src;
     
-    // Multi-select functionality
-    let multiSelectMode = false;
-    let selectedImages = []; // Array to store up to 3 selected images in order
+    // Ordered selection: up to 3 images, slot 1 = main image (used for PDF order later)
+    let selectedImages = []; // Array of { url, element }, max 3, order 1 = main
     
     // Load saved images from localStorage
     function loadSavedImages() {
@@ -112,11 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
         imageItem.setAttribute('data-type', 'uploaded');
         imageItem.setAttribute('data-id', `uploaded-${index}`);
         
-        // Check if this is the currently selected image
-        if (image.url === currentSelectedImageUrl) {
-          imageItem.classList.add('selected-image');
-        }
-        
         const img = document.createElement('img');
         img.src = image.url;
         img.alt = `Uploaded image ${index + 1}`;
@@ -154,165 +148,95 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModalBtn = document.getElementById('closeModalBtn');
     const selectedProductImage = document.getElementById('selectedProductImage');
     const imageUploadInput = document.getElementById('imageUploadInput');
-    const selectMultipleBtn = document.getElementById('selectMultipleBtn');
     
     // Load saved images when page loads
     loadSavedImages();
     
-    // Toggle multi-select mode
-    selectMultipleBtn.addEventListener('click', () => {
-      if (!multiSelectMode) {
-        // Enter multi-select mode
-        multiSelectMode = true;
-        selectMultipleBtn.classList.add('active');
-        selectMultipleBtn.innerHTML = 'Guardar selección';
-        // Clear single selection when entering multi-select mode
-        document.querySelectorAll('.image-item').forEach(item => {
-          item.classList.remove('selected-image');
-        });
-      } else {
-        // Save selection and exit multi-select mode
-        applySelectedImages();
-        multiSelectMode = false;
-        selectMultipleBtn.classList.remove('active');
-        selectMultipleBtn.innerHTML = '<i class="fas fa-check-square me-1"></i>Seleccionar varias';
-        // Close the modal after saving
-        imageModal.style.display = 'none';
-        // Clear multi-select selections
-        selectedImages = [];
-        updateMultiSelectDisplay();
+    // Find image item in modal that matches a URL (for pre-filling selection)
+    function findImageItemByUrl(url) {
+      if (!url) return null;
+      const modal = document.getElementById('imageModal');
+      if (!modal) return null;
+      const items = modal.querySelectorAll('.image-item[data-image]');
+      const currentPart = url.split('/').pop();
+      for (const item of items) {
+        const itemUrl = item.getAttribute('data-image');
+        if (!itemUrl) continue;
+        const itemPart = itemUrl.split('/').pop();
+        if (currentPart === itemPart || url.includes(itemUrl) || itemUrl.includes(url)) return item;
       }
-    });
+      return null;
+    }
     
     // Open modal
     selectImageBtn.addEventListener('click', () => {
       imageModal.style.display = 'flex';
-      multiSelectMode = false;
       selectedImages = [];
-      selectMultipleBtn.classList.remove('active');
-      selectMultipleBtn.innerHTML = '<i class="fas fa-check-square me-1"></i>Seleccionar varias';
-      highlightSelectedImage();
+      const container = selectedProductImage.closest('[data-product-images]') || selectedProductImage.parentElement;
+      const saved = container && container.dataset.selectedImageUrls;
+      if (saved) {
+        try {
+          const urls = JSON.parse(saved);
+          urls.forEach(url => {
+            const item = findImageItemByUrl(url);
+            if (item && selectedImages.length < 3) selectedImages.push({ url: item.getAttribute('data-image'), element: item });
+          });
+        } catch (_) { /* ignore */ }
+      }
+      if (selectedImages.length === 0) {
+        const mainItem = findImageItemByUrl(selectedProductImage.src);
+        if (mainItem) selectedImages.push({ url: mainItem.getAttribute('data-image'), element: mainItem });
+      }
       updateMultiSelectDisplay();
     });
     
-    // Apply selected images and close modal
+    // Apply selected images (slot 1 = main; all 3 stored for PDF order)
     function applySelectedImages() {
-      if (multiSelectMode && selectedImages.length > 0) {
-        // Update main product image to first selected image
+      if (selectedImages.length > 0) {
         selectedProductImage.src = selectedImages[0].url;
         currentSelectedImageUrl = selectedImages[0].url;
-        
-        // Store all selected images for potential future use
-        // You can access them via selectedImages array
-        console.log('Selected images:', selectedImages.map(img => img.url));
+        const urls = selectedImages.map(img => img.url);
+        const container = selectedProductImage.closest('[data-product-images]') || selectedProductImage.parentElement;
+        if (container) container.dataset.selectedImageUrls = JSON.stringify(urls);
       }
     }
     
     // Close modal
     closeModalBtn.addEventListener('click', () => {
-      // Only apply if not in multi-select mode
-      if (!multiSelectMode) {
-        applySelectedImages();
-      }
+      applySelectedImages();
       imageModal.style.display = 'none';
-      // Reset multi-select mode when closing
-      multiSelectMode = false;
       selectedImages = [];
-      selectMultipleBtn.classList.remove('active');
-      selectMultipleBtn.innerHTML = '<i class="fas fa-check-square me-1"></i>Seleccionar varias';
-      updateMultiSelectDisplay();
     });
     
     // Close modal when clicking outside
     imageModal.addEventListener('click', (e) => {
       if (e.target === imageModal) {
-        // Only apply if not in multi-select mode
-        if (!multiSelectMode) {
-          applySelectedImages();
-        }
+        applySelectedImages();
         imageModal.style.display = 'none';
-        // Reset multi-select mode when closing
-        multiSelectMode = false;
         selectedImages = [];
-        selectMultipleBtn.classList.remove('active');
-        selectMultipleBtn.innerHTML = '<i class="fas fa-check-square me-1"></i>Seleccionar varias';
-        updateMultiSelectDisplay();
       }
     });
     
-    // Highlight the currently selected image in the modal
-    function highlightSelectedImage() {
-      // Remove selected class from all images
-      document.querySelectorAll('.image-item').forEach(item => {
-        item.classList.remove('selected-image');
-      });
-      
-      // Add selected class to the currently selected image
-      const currentImageUrl = selectedProductImage.src;
-      
-      document.querySelectorAll('.image-item').forEach(item => {
-        const itemImageUrl = item.getAttribute('data-image');
-        if (itemImageUrl && currentImageUrl.includes(itemImageUrl)) {
-          item.classList.add('selected-image');
-        }
-      });
-    }
-    
-    // Handle image selection
+    // Handle image selection: click to add (up to 3), click again to remove. Order 1 = main.
     function handleImageSelect(imageItem) {
       const imageUrl = imageItem.getAttribute('data-image');
-      const imageType = imageItem.getAttribute('data-type');
-      
       if (!imageUrl) return;
-      
-      // Multi-select mode - works for all image types
-      if (multiSelectMode) {
-        handleMultiSelect(imageItem, imageUrl);
-      } else {
-        // Single select mode
-        selectedProductImage.src = imageUrl;
-        currentSelectedImageUrl = imageUrl;
-        
-        // Update the selected class
-        document.querySelectorAll('.image-item').forEach(item => {
-          item.classList.remove('selected-image');
-        });
-        imageItem.classList.add('selected-image');
-        
-        // Close the modal
-        imageModal.style.display = 'none';
-      }
+      handleToggleSelection(imageItem, imageUrl);
     }
     
-    // Handle multi-select functionality
-    function handleMultiSelect(imageItem, imageUrl) {
+    // Toggle selection: click to add (up to 3), click again to remove. Order 1 = main image.
+    function handleToggleSelection(imageItem, imageUrl) {
       const existingIndex = selectedImages.findIndex(img => img.url === imageUrl);
       
       if (existingIndex !== -1) {
-        // Deselect if already selected
         selectedImages.splice(existingIndex, 1);
-        imageItem.classList.remove('multi-selected');
-        imageItem.removeAttribute('data-selection-order');
-        // Remove number badge
-        const badge = imageItem.querySelector('.selection-number-badge');
-        if (badge) badge.remove();
       } else {
-        // Select if not already selected and under limit
-        if (selectedImages.length < 3) {
-          selectedImages.push({
-            url: imageUrl,
-            element: imageItem
-          });
-          imageItem.classList.add('multi-selected');
-          imageItem.setAttribute('data-selection-order', selectedImages.length);
-          // Add number badge
-          addSelectionBadge(imageItem, selectedImages.length);
-        } else {
-          // Show message that limit is reached
+        if (selectedImages.length >= 3) {
           alert('Solo puedes seleccionar hasta 3 imágenes');
+          return;
         }
+        selectedImages.push({ url: imageUrl, element: imageItem });
       }
-      
       updateMultiSelectDisplay();
     }
     
@@ -382,7 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
           saveImages();
         }
         
-        // Remove from selected images if it's selected in multi-select mode
         const selectedIndex = selectedImages.findIndex(img => img.url === imageUrl);
         if (selectedIndex !== -1) {
           selectedImages.splice(selectedIndex, 1);

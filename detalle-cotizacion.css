@@ -1464,8 +1464,8 @@ textarea.form-control {
   }
 
   .edit-btn-mobile,
-  .delete-btn-mobile, 
-  .refresh-btn-mobile {
+  .delete-btn-mobile,
+  .duplicate-btn-mobile {
     display: flex !important;
   }
 

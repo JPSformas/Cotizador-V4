@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const warningIcon = pvp.querySelector('.pvp-warning-icon');
             const checkIcon = pvp.querySelector('.pvp-check-icon');
             const pvpValue = pvp.querySelector('.detail-value');
+            const refreshBtn = pvp.querySelector('.refresh-icon-btn');
             
             // Calculate if there's a variation
             let percentChange = 0;
@@ -127,6 +128,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Always show check when toggle is ON
                     checkIcon.style.display = 'inline-block';
                 }
+                // Hide refresh button when check is visible (price updated)
+                if (refreshBtn) refreshBtn.style.display = 'none';
             } else {
                 // Toggle OFF: Show PVP with original price
                 if (pvpValue) {
@@ -137,10 +140,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Has variation: show warning icon
                     if (warningIcon) warningIcon.style.display = 'inline-block';
                     if (checkIcon) checkIcon.style.display = 'none';
+                    if (refreshBtn) refreshBtn.style.display = '';
                 } else {
                     // No variation: always show check (regardless of toggle state)
                     if (warningIcon) warningIcon.style.display = 'none';
                     if (checkIcon) checkIcon.style.display = 'inline-block';
+                    // Hide refresh button when check is visible
+                    if (refreshBtn) refreshBtn.style.display = 'none';
                 }
             }
         });
