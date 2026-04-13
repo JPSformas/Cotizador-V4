@@ -445,3 +445,99 @@
 .tf-btn.pedido-generated-btn::after {
   background-color: #1e7e34;
 }
+
+/* PVP / price variation (detalle cotización + editar ítem) */
+.pvp-input-row {
+  display: flex;
+  align-items: center;
+}
+
+.pvp-input-row .input-group {
+  flex: 1;
+}
+
+.pvp-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.pvp-warning-icon {
+  color: #ffc107;
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
+}
+
+.pvp-check-icon {
+  color: #28a745;
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
+}
+
+.pvp-actual {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  margin-top: 0.25rem;
+  color: #6c757d;
+}
+
+.pvp-actual .detail-label {
+  font-size: 0.7rem;
+  color: #6c757d;
+  min-width: 60px;
+}
+
+.pvp-actual .detail-value {
+  font-size: 0.7rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.price-change-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  margin-left: 0.25rem;
+}
+
+.price-change-indicator.price-down {
+  color: #28a745;
+  background-color: #d4edda;
+}
+
+.price-change-indicator.price-up {
+  color: #dc3545;
+  background-color: #f8d7da;
+}
+
+.price-change-indicator.price-neutral {
+  color: #6c757d;
+  background-color: #e9ecef;
+}
+
+.price-change-indicator i {
+  font-size: 0.6rem;
+}
+
+.detail-label {
+  font-weight: 500;
+  color: #6c757d;
+  min-width: 35px;
+}
+
+.detail-value {
+  font-weight: 600;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .detail-label {
+    min-width: 30px;
+  }
+}
