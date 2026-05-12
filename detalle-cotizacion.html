@@ -216,7 +216,7 @@
                     </div>
                 </div>
 
-                <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-5">
                     <div class="d-flex align-items-center gap-2">
                         <div class="toggle-switch-wrapper">
                             <label for="actualizarPreciosToggle" class="toggle-switch-label">
@@ -229,10 +229,26 @@
                             <i class="fas fa-sync-alt"></i>
                         </button>
                     </div>
-                    <div class="dropdown">
-                        <button class=" btn btn-secondary d-flex align-items-center dropdown-toggle" type="button" id="dropdownAgregarProductos" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="d-inline ">Agregar</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="delete-btn" id="btnEliminarItemsSeleccionados" disabled title="Eliminar seleccionados" aria-label="Eliminar ítems seleccionados">
+                            <i class="far fa-trash-alt"></i>
                         </button>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-secondary d-flex align-items-center dropdown-toggle" id="dropdownOrdenarItems" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                                <span class="d-inline">Ordenar por</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownOrdenarItems">
+                                <li><button type="button" class="dropdown-item option text-decoration-none active" data-orden="personalizado">Personalizado</button></li>
+                                <li><button type="button" class="dropdown-item option text-decoration-none" data-orden="nombre-asc">Nombre: A-Z</button></li>
+                                <li><button type="button" class="dropdown-item option text-decoration-none" data-orden="nombre-desc">Nombre: Z-A</button></li>
+                                <li><button type="button" class="dropdown-item option text-decoration-none" data-orden="pvp-asc">Precio PVP: Menor a mayor</button></li>
+                                <li><button type="button" class="dropdown-item option text-decoration-none" data-orden="pvp-desc">Precio PVP: Mayor a menor</button></li>
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-secondary d-flex align-items-center dropdown-toggle" id="dropdownAgregarProductos" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="d-inline">Agregar</span>
+                            </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAgregarProductos">
                             <li class="dropdown-item option text-decoration-none" id="agregarProductoDesktop" data-bs-toggle="modal" data-bs-target="#modalProductoImportado">
                                 Producto de catálogo
@@ -242,25 +258,22 @@
                             </li>
                         </ul>
                     </div>
+                    </div>
                 </div>
 
                 <div class="table-responsive mb-4 rounded-3">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th style="width: 40px;"></th>
-                                <th style="width: 130px;">Producto</th>
-                                <th style="width: 250px;" class="sortable-header" data-sort="nombre">
-                                    Nombre
-                                    <i class="fas fa-sort sort-icon"></i>
+                                <th class="drag-column-header" style="font-size: 16px; width: 40px;" scope="col">
+                                    <input type="checkbox" id="selectAllCotizacionItems" class="form-check-input item-select-all-checkbox" title="Seleccionar todos" aria-label="Seleccionar todos los ítems">
                                 </th>
+                                <th style="width: 130px;">Producto</th>
+                                <th style="width: 250px;">Nombre</th>
                                 <th style="width: 350px;">Descripción</th>
                                 <th style="width: 100px;">Cantidad</th>
                                 <th style="width: 120px;">Precio Unitario</th>
-                                <th style="width: 120px;" class="sortable-header" data-sort="subtotal">
-                                    Subtotal
-                                    <i class="fas fa-sort sort-icon"></i>
-                                </th>
+                                <th style="width: 120px;">Subtotal</th>
                                 <th style="width: 40px;"></th>
                                 <th style="width: 40px;"></th>
                                 <th style="width: 40px;"></th>
@@ -269,7 +282,14 @@
                         <tbody>
                             <tr id="item-1" class="item-container importado" data-id="#">
                                 <td class="dragItem">
-                                    <span class="material-symbols-outlined">drag_indicator</span>
+                                    <div class="dragItem-inner">
+                                        <span class="material-symbols-outlined drag-handle" aria-hidden="true">drag_indicator</span>
+                                        <span class="item-position-wrap">
+                                            <button type="button" class="item-position-display" aria-label="Editar posición">1</button>
+                                            <input type="number" class="item-position-input" min="1" step="1" aria-label="Nueva posición" hidden>
+                                        </span>
+                                        <input type="checkbox" class="form-check-input item-row-checkbox" aria-label="Seleccionar ítem">
+                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <div class="product-image mx-auto">
@@ -360,7 +380,14 @@
                             </tr>
                             <tr id="item-2" class="item-container importado" data-id="#">
                                 <td class="dragItem">
-                                    <span class="material-symbols-outlined">drag_indicator</span>
+                                    <div class="dragItem-inner">
+                                        <span class="material-symbols-outlined drag-handle" aria-hidden="true">drag_indicator</span>
+                                        <span class="item-position-wrap">
+                                            <button type="button" class="item-position-display" aria-label="Editar posición">2</button>
+                                            <input type="number" class="item-position-input" min="1" step="1" aria-label="Nueva posición" hidden>
+                                        </span>
+                                        <input type="checkbox" class="form-check-input item-row-checkbox" aria-label="Seleccionar ítem">
+                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <div class="product-image mx-auto">
@@ -466,7 +493,14 @@
                             </tr>
                             <tr id="item-3" class="item-container generico" data-id="#">
                                 <td class="dragItem">
-                                    <span class="material-symbols-outlined">drag_indicator</span>
+                                    <div class="dragItem-inner">
+                                        <span class="material-symbols-outlined drag-handle" aria-hidden="true">drag_indicator</span>
+                                        <span class="item-position-wrap">
+                                            <button type="button" class="item-position-display" aria-label="Editar posición">3</button>
+                                            <input type="number" class="item-position-input" min="1" step="1" aria-label="Nueva posición" hidden>
+                                        </span>
+                                        <input type="checkbox" class="form-check-input item-row-checkbox" aria-label="Seleccionar ítem">
+                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <div class="product-image mx-auto">
@@ -1507,6 +1541,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script src="js-scripts/sidebar-nested.js"></script>
     <script src="js-scripts/drag-and-drop-items.js"></script>
+    <script src="js-scripts/cotizacion-items-checkboxes.js"></script>
+    <script src="js-scripts/item-position-reorder.js"></script>
     <script src="js-scripts/add-quantity-manager.js"></script>
     <script src="js-scripts/image-upload-manager.js"></script>
     <script src="js-scripts/product-search.js"></script>

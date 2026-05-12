@@ -143,6 +143,15 @@
   transform: scale(1.1);
 }
 
+.delete-btn:disabled,
+.delete-btn:disabled:hover {
+  opacity: 0.45;
+  cursor: not-allowed;
+  color: #555;
+  transform: none;
+  pointer-events: none;
+}
+
 /* Refresh & Duplicate icon button styles */
 .refresh-icon-btn, .duplicate-icon-btn {
   background: none;
@@ -277,24 +286,125 @@
 }
 
 /* Styles for drag and drop functionality */
+.drag-column-header {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.drag-column-header .item-select-all-checkbox {
+  cursor: pointer;
+  margin: 0;
+}
+
+/* td stays table-cell so the cell spans full row height; flex lives on .dragItem-inner */
 .dragItem {
-  align-content: center;
+  vertical-align: middle;
+  text-align: center;
   user-select: none;
 }
 
-.dragItem span {
-  color: #b4b4b4;
-  cursor: grab;
+.dragItem-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
 }
 
-.dragItem span:hover {
+.dragItem-inner .item-row-checkbox {
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.item-position-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 1.5rem;
+}
+
+.item-position-display {
+  border: none;
+  background: transparent;
+  min-width: 1rem;
+  padding: 0.15rem 0.35rem;
+  margin-right: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #495057;
+  cursor: pointer;
+  border-radius: 4px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.item-position-display:hover {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.item-position-input {
+  box-sizing: border-box;
+  width: 2.75rem;
+  min-width: 0;
+  height: 1.2rem;
+  margin-right: 0.25rem;
+  padding: 0.2rem 0.25rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #212529;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.item-position-input:hover {
+  border-color: #adb5bd;
+}
+
+.item-position-input:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 .15rem rgba(13,110,253,.25);
+}
+
+.item-position-input::placeholder {
+  color: #adb5bd;
+}
+
+.item-position-input::-webkit-outer-spin-button,
+.item-position-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.item-position-input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.dragItem-inner .drag-handle {
+  color: #b4b4b4;
+  cursor: grab;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.dragItem-inner .drag-handle:hover {
   color: #666;
   cursor: grab;
   transform: scale(1.1);
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.dragItem span:active {
+.dragItem-inner .drag-handle:active {
   cursor: grabbing;
 }
 
