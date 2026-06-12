@@ -7,6 +7,30 @@ document.addEventListener("DOMContentLoaded", () => {
         rows.forEach((row, i) => (row.id = `item-${i + 1}`));
     }
 
+    function editPageForRow(row) {
+        return row.classList.contains("generico") ? "editItem-generico.html" : "editItem.html";
+    }
+
+    /** `orden` = 1-based index aligned with `id="item-{orden}"` after updateItemIds. */
+    function syncCotizacionItemEditNavFromTable() {
+        const rows = tableBody.querySelectorAll(".item-container");
+        const chain = [];
+        rows.forEach((row, i) => {
+            const orden = i + 1;
+            const page = editPageForRow(row);
+            chain.push({ page });
+            const href = `${page}?orden=${orden}`;
+            row.querySelectorAll("a.edit-btn, a.edit-btn-mobile").forEach((a) => {
+                a.setAttribute("href", href);
+            });
+        });
+        try {
+            localStorage.setItem("cotizacionEditNavChain", JSON.stringify(chain));
+        } catch (e) {
+            /* ignore quota / private mode */
+        }
+    }
+
     function saveNewOrder() {
         const rows = tableBody.querySelectorAll(".item-container");
         const order = Array.from(rows).map((row, i) => ({
@@ -21,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const options = opts && typeof opts === "object" ? opts : {};
         updateItemIds();
         saveNewOrder();
+        syncCotizacionItemEditNavFromTable();
         document.dispatchEvent(
             new CustomEvent("cotizacion-items-reordered", {
                 detail: { source: options.source === "dropdown" ? "dropdown" : "user" }
@@ -31,6 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
     window.syncCotizacionItemOrderAfterReorder = function (opts) {
         syncAfterReorder(opts);
     };
+
+    window.syncCotizacionItemEditNavFromTable = syncCotizacionItemEditNavFromTable;
+
+    updateItemIds();
+    syncCotizacionItemEditNavFromTable();
 
     Sortable.create(tableBody, {
         animation: 200,

@@ -118,6 +118,22 @@ function setupEventListeners() {
   })
 }
 
+function formatProductAttributesLine(product) {
+  const parts = []
+  const attr1 = product["Atributo 1"]
+  const val1 = product["Valor atributo 1"]
+  const attr2 = product["Atributo 2"]
+  const val2 = product["Valor atributo 2"]
+
+  const hasVal = (v) => v != null && String(v).trim() !== ""
+  if (attr1 && hasVal(val1)) parts.push(`${attr1}: ${val1}`)
+  if (attr2 && hasVal(val2)) parts.push(`${attr2}: ${val2}`)
+
+  return parts.length
+    ? `<div class="product-attributes">${parts.join(" · ")}</div>`
+    : ""
+}
+
 function renderProducts(products) {
   if (products.length === 0 && hasSearched) {
     searchPlaceholder.style.display = "none"
@@ -159,7 +175,8 @@ function renderProducts(products) {
                     <div class="flex-grow-1">
                         <div class="product-name">${product.Nombre}</div>
                         <div class="product-sku">SKU: ${product.SKU}</div>
-                        <div class="mt-2">
+                        ${formatProductAttributesLine(product)}
+                        <div class="mt-1">
                             <div class="product-stock">Stock disponible: ${product.Stock}</div>
                         </div>
                     </div>

@@ -7,8 +7,10 @@
   
   <!-- Bootstrap 5 & FontAwesome -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet">
  
+  <link rel="stylesheet" href="Fonts/fonts.css">
+  <link rel="stylesheet" href="Fonts/font-icons.css">
   <link href="styles/nuevo-header.css" rel="stylesheet">
   <link href="styles/complementos.css" rel="stylesheet">
   <link href="styles/sidebar.css" rel="stylesheet">
@@ -51,10 +53,16 @@
 
 <!-- ==========  CONTENIDO PRINCIPAL  ========== -->
 <main class="container py-4">
-  <div class="d-flex justify-content-start align-items-center mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
     <a href="detalle-cotizacion.html" class="back-link">
         <i class="fas fa-chevron-left"></i> Volver a detalle de cotización
     </a>
+    <div class="d-flex align-items-center gap-2">
+      <button type="button" class="tf-btn" id="saveItemCotization" aria-label="Guardar ítem de cotización">
+        <span class="text d-none d-lg-inline">Guardar ítem de cotización</span>
+        <i class="icon fas fa-save" aria-hidden="true"></i>
+      </button>
+    </div>
   </div>
 
   <form>
@@ -77,6 +85,16 @@
               <div class="col-md-6">
                 <label for="SKU" class="form-label">SKU</label>
                 <input type="text" id="SKU" name="SKU" class="form-control">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="tiempoProduccion" class="form-label">Tiempo de produccion</label>
+                <input type="text" id="tiempoProduccion" name="tiempoProduccion" class="form-control" placeholder="10-12 días hábiles">
+              </div>
+              <div class="col-md-6">
+                <label for="informacionEnvio" class="form-label">Información de envío</label>
+                <input type="text" id="informacionEnvio" name="informacionEnvio" class="form-control" placeholder="" value="">
               </div>
             </div>
             <label for="Descripcion" class="form-label">Descripción del producto</label>
@@ -115,22 +133,23 @@
             <label for="PVP/Costo" class="form-label">PVP / Costo</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
-              <input type="number" step="any" inputmode="numeric" id="PVP/Costo" name="PVP/Costo" class="form-control form-control-sm" value="">
+              <button type="button" class="icon-button"><i class="fas fa-edit"></i></button>
+              <input type="text" inputmode="numeric" id="PVP/Costo" name="PVP/Costo" class="form-control form-control-sm" value="" data-financial-format="true">
             </div>  
           </div>
           <div class="col-md-3 mb-3 mb-md-0">
-            <label for="stockDisponible" class="form-label">Stock disponible</label>
-            <input type="number" inputmode="numeric" id="stockDisponible" name="stockDisponible" class="form-control form-control-sm" value="" >
-          </div>
-          <div class="col-md-3 mb-3 mb-md-0">
             <label for="minimoBonificacion" class="form-label">Mínimo para logo gratis</label>
-            <input type="number" inputmode="numeric" id="minimoBonificacion" name="minimoBonificacion" class="form-control form-control-sm" value="">
+            <div class="input-with-icon">
+              <input type="number" inputmode="numeric" id="minimoBonificacion" name="minimoBonificacion" class="form-control form-control-sm" value="">
+              <button type="button" class="icon-button"><i class="fas fa-edit"></i></button>
+            </div>
           </div>
           <div class="col-md-3">
             <label for="setupLogo" class="form-label">Setup logo</label>
             <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="number" step="any" inputmode="numeric" id="setupLogo" name="setupLogo" class="form-control form-control-sm" value="">
+              <span class="input-group-text">$</span>
+              <button type="button" class="icon-button"><i class="fas fa-edit"></i></button>
+              <input type="text" inputmode="numeric" id="setupLogo" name="setupLogo" class="form-control form-control-sm" value="" data-financial-format="true">
             </div> 
           </div>
         </div>
@@ -160,19 +179,19 @@
                 <td class="colCotizacionPrecio">
                   <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionPrecio"  value="">   
+                    <input type="text" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionPrecio" value="" data-financial-format="true">   
                   </div>
                 </td>
                 <td class="colCotizacionSetup">
                   <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionSetup" value="" disabled>   
+                    <input type="text" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionSetup" value="" data-financial-format="true" disabled>   
                   </div>
                 </td>
                 <td class="colCotizacionCostoExtra">
                   <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCostoExtra" value="">   
+                    <input type="text" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCostoExtra" value="" data-financial-format="true">   
                   </div>
                   
                 </td>
@@ -197,13 +216,13 @@
                 <td class="colCotizacionPrecioUnitario">
                   <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionPrecioUnitario" value="" disabled>   
+                    <input type="text" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionPrecioUnitario" value="" data-financial-format="true" disabled>   
                   </div>
                 </td>
                 <td class="colCotizacionSubtotal">
                   <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input ype="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionSubtotal" value="" disabled>  
+                    <input type="text" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionSubtotal" value="" data-financial-format="true" disabled>  
                   </div>  
                 </td>
                 <td class="text-center align-middle"><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
@@ -216,19 +235,19 @@
                 <td class="colCotizacionPrecio">
                   <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionPrecio"  value="">   
+                    <input type="text" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionPrecio" value="" data-financial-format="true">   
                   </div>
                 </td>
                 <td class="colCotizacionSetup">
                   <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionSetup" value="" disabled>   
+                    <input type="text" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionSetup" value="" data-financial-format="true" disabled>   
                   </div>
                 </td>
                 <td class="colCotizacionCostoExtra">
                   <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCostoExtra" value="">   
+                    <input type="text" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionCostoExtra" value="" data-financial-format="true">   
                   </div>
                   
                 </td>
@@ -253,13 +272,13 @@
                 <td class="colCotizacionPrecioUnitario">
                   <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionPrecioUnitario" value="" disabled>   
+                    <input type="text" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionPrecioUnitario" value="" data-financial-format="true" disabled>   
                   </div>
                 </td>
                 <td class="colCotizacionSubtotal">
                   <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input ype="number" step="any" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionSubtotal" value="" disabled>  
+                    <input type="text" inputmode="numeric" class="form-control form-control-sm" name="colCotizacionSubtotal" value="" data-financial-format="true" disabled>  
                   </div>  
                 </td>
                 <td class="text-center align-middle"><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
@@ -275,7 +294,7 @@
             <div class="fieldLabel" >Precio Unitario: <span class="fieldValue">$ 8.455,00</span></div>
             <div class="fieldLabel" >Subtotal: <span class="fieldValue">$ 845.500,00</span></div>
             <div class="action-buttons">
-              <button href="" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></button>
+              <button type="button" class="edit-btn-mobile" data-bs-toggle="offcanvas" data-bs-target="#sidebarMasElementos"><span>Editar</span></button>
               <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
             </div>
           </div>
@@ -285,7 +304,7 @@
             <div class="fieldLabel" >Precio Unitario: <span class="fieldValue">$ 7.305,00</span></div>
             <div class="fieldLabel" >Subtotal: <span class="fieldValue">$ 1.461.000,00</span></div>
             <div class="action-buttons">
-              <button href="" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></button>
+              <button type="button" class="edit-btn-mobile" data-bs-toggle="offcanvas" data-bs-target="#sidebarMasElementos"><span>Editar</span></button>
               <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
             </div>
           </div>
@@ -299,10 +318,16 @@
       </div>
     </div>
 
-    <!-- Botones guardado -->
-    <div class="d-flex justify-content-end mt-4">
-      <a href="detalle-cotizacion.html" type="button" class="btn btn-outline-secondary me-3">Volver a la cotización "Prueba JP"</a>
-      <button type="button" class="btn btn-primary" id="saveItemCotization"><i class="fas fa-save me-2"></i>Guardar ítem de cotización</button>
+    <!-- Navegación entre ítems (orden de tabla en detalle-cotizacion) -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 gap-3">
+      <button type="button" class="tf-btn" id="save&prevItemCotization" aria-label="Guardar y volver al ítem anterior">
+        <i class="icon fas fa-chevron-left" aria-hidden="true"></i>
+        <span class="text d-none d-lg-inline">Ítem anterior</span>
+      </button>
+      <button type="button" class="tf-btn" id="save&nextItemCotization" aria-label="Guardar y volver al ítem siguiente">
+        <span class="text d-none d-lg-inline">Ítem siguiente</span>
+        <i class="icon fas fa-chevron-right" aria-hidden="true"></i>
+      </button>
     </div>
   </form>
 
@@ -321,15 +346,15 @@
         </label>
         <label class="form-label d-block w-100">
           <span>Precio x Volumen</span>
-          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionPrecio" value="$ 8.005,00" disabled>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionPrecio" value="8.005,00" data-financial-format="true" disabled>
         </label>
         <label class="form-label d-block w-100">
           <span>SETUP Prorrateado</span>
-          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionSetup" value="$ 300,00" disabled>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionSetup" value="300,00" data-financial-format="true" disabled>
         </label>
         <label class="form-label d-block w-100">
           <span>Costo extra</span>
-          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionCostoExtra" value="$ 150,00">
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionCostoExtra" value="150,00" data-financial-format="true">
         </label>
         <label class="form-label d-block w-100">
           <span>Margen</span>
@@ -354,11 +379,11 @@
         </label>
         <label class="form-label d-block w-100">
           <span>Precio Unitario</span>
-          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionPrecioUnitario" value="$ 8.455,00" disabled>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionPrecioUnitario" value="8.455,00" data-financial-format="true" disabled>
         </label>
         <label class="form-label d-block w-100">
           <span>Subtotal</span>
-          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionSubtotal" value="$ 845.500,00" disabled>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionSubtotal" value="845.500,00" data-financial-format="true" disabled>
         </label>   
       </div>
     </div>
@@ -372,9 +397,11 @@
     <div class="image-modal">
       <div class="modal-header">
         <h5>Seleccionar Imagen</h5>
-        <button type="button" class="close-btn" id="closeModalBtn">
-          <i class="fas fa-times"></i>
-        </button>
+        <div class="modal-header-actions">
+          <button type="button" class="close-btn" id="closeModalBtn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
       </div>
       
       <div class="modal-body">
@@ -394,6 +421,24 @@
             </div>
           </div>
         </div>
+
+        <div class="image-section">
+          <h6>Imágenes de producto</h6>
+          <div class="image-grid" id="productImagesGrid">
+            <div class="image-item" data-image="IMG/placeholderGeneric.jpg" data-type="product" data-id="product-1">
+              <img src="IMG/placeholderGeneric.jpg" alt="Product image 1">
+            </div>
+          </div>
+        </div>
+
+        <div class="image-section">
+          <h6>Imágenes personalizadas</h6>
+          <div class="image-grid" id="zakekeImagesGrid">
+            <div class="image-item" data-image="IMG/placeholderGeneric.jpg" data-type="zakeke" data-id="zakeke-1">
+              <img src="IMG/placeholderGeneric.jpg" alt="Zakeke image 1">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -401,5 +446,7 @@
 <!-- Bootstrap bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js-scripts/select-image-modal.js"></script>
+<script src="js-scripts/financial-formatting.js"></script>
+<script src="js-scripts/cotizacion-edit-item-nav.js"></script>
 </body>
 </html>
